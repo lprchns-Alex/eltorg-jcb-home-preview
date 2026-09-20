@@ -4,6 +4,8 @@
 
 ## Просмотр
 
+Опубликованная страница: https://lprchns-alex.github.io/eltorg-jcb-home-preview/
+
 Локальный просмотр: http://127.0.0.1:8769/#home
 
 Сайт написан на HTML/CSS/JavaScript, без сборки. Используемые файлы: index.html, precision.css, app.js, assets/.
