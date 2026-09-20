@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1f2f2">
+  <meta name="description" content="Эльторг: запчасти для спецтехники JCB. Каталог, подбор деталей и консультация. Санкт-Петербург, Домостроительная, 16.">
+  <title>Эльторг — запчасти для JCB</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="precision.css?v=45">
+  <script src="assets/lucide.min.js" defer></script>
+  <script src="app.js?v=41" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержанию</a>
+  <header class="site-header">
+    <div class="container main-header">
+      <a class="brand" href="#home" aria-label="Эльторг — главная"><span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><span class="brand-word">ЭЛЬТОРГ<small>Запчасти для JCB</small></span></a>
+      <form class="header-search" data-search><i data-lucide="search"></i><input name="q" aria-label="Поиск в каталоге" placeholder="Артикул или название" autocomplete="off"><button class="icon-button" title="Найти запчасть" aria-label="Найти запчасть"><i data-lucide="arrow-right"></i></button></form>
+      <a class="header-phone" href="tel:+79650894699" aria-label="Позвонить: +7 (965) 089-46-99"><i data-lucide="phone"></i><span>+7 (965) 089-46-99<small>Наталья · отдел запчастей</small></span></a>
+      <button class="button dark header-request" data-request="Подбор запчасти">Подобрать запчасть<i data-lucide="arrow-up-right"></i></button>
+      <button class="icon-button mobile-menu" aria-label="Открыть меню" aria-expanded="false" aria-controls="main-nav"><i data-lucide="menu"></i></button>
+    </div>
+    <nav class="container navigation" id="main-nav" aria-label="Основная навигация"><div class="catalog-disclosure"><button class="catalog-button" aria-expanded="false" aria-controls="catalog-menu"><i data-lucide="layout-grid"></i>Каталог запчастей<i data-lucide="chevron-down"></i></button><div class="catalog-menu" id="catalog-menu" hidden></div></div><a href="#catalog?category=engine">Двигатели</a><button data-request="Подбор шланга РВД">Шланги РВД</button><button data-request="Подбор стекла JCB">Стёкла JCB</button><a href="#delivery">Доставка и оплата</a><a href="#contacts">Контакты</a><a class="nav-location" href="#contacts"><i data-lucide="map-pin"></i>Санкт-Петербург</a></nav>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="footer"><div class="container footer-main"><div><a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><span class="brand-word">ЭЛЬТОРГ<small>Запчасти для JCB</small></span></a><p>Детали имеют значение.<br>Особенно когда техника должна работать.</p></div><div><span class="footer-label">КАТАЛОГ</span><a href="#catalog?category=engine">Двигатель</a><a href="#catalog?category=hydraulics">Гидравлика</a><a href="#catalog?category=electrics">Электрика</a><a href="#catalog">Все запчасти<i data-lucide="arrow-up-right"></i></a></div><div><span class="footer-label">ЭЛЬТОРГ</span><a href="#about">О компании</a><a href="#delivery">Доставка и оплата</a><a href="#contacts">Контакты</a><button data-request="Обратный звонок">Обратный звонок</button></div><div class="footer-contacts"><a href="tel:+79650894699">+7 (965) 089-46-99</a><span>Наталья</span><a href="tel:+79650894128">+7 (965) 089-41-28</a><span>Антон</span><a class="telegram-link" href="https://t.me/EltorgJCB" target="_blank" rel="noopener"><i data-lucide="send"></i>Написать в Telegram</a></div></div><div class="container footer-bottom"><span>© 2026 ООО «Эльторг»</span><span>ООО «Эльторг» не является официальным дилером JCB в России.</span></div></footer>
+  <dialog id="request-dialog" aria-labelledby="request-title"><button class="icon-button dialog-close" aria-label="Закрыть форму"><i data-lucide="x"></i></button><div id="request-body"></div></dialog>
+  <div class="mobile-bottom"><a href="#catalog"><i data-lucide="layout-grid"></i>Каталог</a><button data-focus-search><i data-lucide="search"></i>Поиск</button><button data-request="Подбор запчасти"><i data-lucide="messages-square"></i>Подбор</button><a href="tel:+79650894699"><i data-lucide="phone"></i>Позвонить</a></div>
+</body>
+</html>
