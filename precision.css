@@ -117,21 +117,21 @@ main:focus, section[tabindex]:focus { outline: none; }
 .finder { background: #fff; border-bottom: 1px solid var(--line); }
 .finder-inner { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; align-items: center; padding-block: 44px; }
 .finder-heading h2 { font-size: 32px; line-height: 1.25; }
-.finder-tabs { display: flex; align-items: stretch; gap: 4px; padding: 7px; margin: 0; background: #fff; border: 0; border-radius: 10px 0 0 10px; }
+.finder-tabs { display: flex; align-items: stretch; gap: 4px; padding: 7px; margin: 0; background: #f0f2f2; border: 0; border-radius: 8px; }
 .finder-tabs button { color: var(--muted); padding: 0 16px; font-size: 14px; line-height: 1.4; border-radius: 6px; white-space: nowrap; }
 .finder-tabs button:hover { background: #f5f6f6; color: var(--ink); }
-.finder-tabs button[aria-selected=true] { color: var(--ink); background: #f0f2f2; font-weight: 650; }
-.finder-workspace { min-width: 0; grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: auto minmax(0,1fr); align-items: stretch; border: 2px solid var(--yellow); border-radius: 12px; background: var(--yellow); }
+.finder-tabs button[aria-selected=true] { color: var(--ink); background: #fff; font-weight: 650; box-shadow: 0 1px 4px #22252712; }
+.finder-workspace { min-width: 0; grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: auto minmax(0,1fr); align-items: stretch; gap: 16px; }
 .finder-workspace #finder-panel { min-width: 0; }
 .search-large { display: flex; align-items: center; gap: 16px; border: 1px solid #cdd3d5; border-radius: 4px; background: #fff; padding: 5px 5px 5px 20px; min-height: 64px; }
 .search-large:focus-within { border-color: #333f45; box-shadow: 0 0 0 1px #333f45; }
 .search-large input, .search-large select { width: 100%; min-width: 0; border: 0; outline: none; background: transparent; height: 48px; font-size: 16px; }
 .search-large > svg { width: 19px; color: #858e93; }
 .search-large .button { min-height: 52px; padding: 14px 24px; gap: 30px; flex-shrink: 0; }
-.finder-workspace .finder-search { height: 56px; min-height: 56px; padding: 0; gap: 0; border: 0; border-radius: 0 10px 10px 0; background: var(--yellow); box-shadow: none; }
-.finder-workspace:focus-within { box-shadow: 0 0 0 3px #f3d44133; }
-.finder-search .finder-input { height: 100%; padding-inline: 20px; background: #fff; border-radius: 0 10px 10px 0; }
-.finder-workspace .finder-submit { display: flex; justify-content: center; width: 80px; min-height: 56px; padding: 0; border-radius: 0 10px 10px 0; background: var(--yellow); color: var(--ink); }
+.finder-workspace .finder-search { height: 60px; min-height: 60px; padding: 0; gap: 0; border: 2px solid var(--yellow); border-radius: 12px; background: var(--yellow); box-shadow: none; }
+.finder-workspace .finder-search:focus-within { box-shadow: 0 0 0 3px #f3d44133; }
+.finder-search .finder-input { height: 100%; padding-inline: 20px; background: #fff; border-radius: 10px; }
+.finder-workspace .finder-submit { display: flex; justify-content: center; width: 80px; min-height: 0; height: 56px; padding: 0; border-radius: 0 10px 10px 0; background: var(--yellow); color: var(--ink); }
 .finder-workspace .finder-search .finder-submit svg { display: block; width: 23px; height: 23px; stroke-width: 2; }
 .finder-search .button:hover { background: #ffe373; }
 .finder-input { display: flex; align-items: center; flex: 1; min-width: 0; }
@@ -540,9 +540,9 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .hero-bottom a { font-size: 14px; }
   .hero-bottom > span { display: none; }
   .finder-workspace { grid-template-columns: 1fr; }
-  .finder-workspace .finder-tabs { min-height: 52px; gap: 4px; margin: 0; border: 0; border-radius: 10px 10px 0 0; }
+  .finder-workspace .finder-tabs { min-height: 52px; gap: 4px; margin: 0; border: 0; border-radius: 8px; }
   .finder-workspace .finder-tabs button { flex: 1 1 0; padding-inline: 8px; }
-  .finder-search .finder-input { border-radius: 0 10px 10px 10px; padding-inline: 14px; }
+  .finder-search .finder-input { padding-inline: 14px; }
   .finder-workspace .finder-submit { width: 60px; }
   .section-top h2 { font-size: 32px; }
   .parts-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 40px 24px; }
