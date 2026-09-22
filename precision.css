@@ -68,7 +68,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .header-search:focus-within { border-color: var(--ink); }
 .header-phones { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
 .header-phone { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 1.1; font-weight: 650; white-space: nowrap; }
-.header-phone small { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+.header-phone small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 .navigation { display: flex; min-height: 56px; align-items: stretch; gap: 32px; border-top: 1px solid var(--line); font-size: 14px; font-weight: 550; }
 .navigation > a, .navigation > button { display: flex; align-items: center; gap: 8px; white-space: nowrap; padding: 0; }
 .navigation > a:hover, .navigation > button:hover { color: #879195; }
@@ -488,6 +488,16 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .hero h1 { font-size: 70px; }
   .hero-inner { padding-top: 52px; }
   .hero-photo { object-position: center 52%; }
+}
+@media (min-width:1800px) {
+  .hero { height: min(620px, calc(100svh - 242px)); background: #edf1f3; }
+  .hero > picture { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+  .hero > picture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #edf1f3 0 34%, #edf1f3e6 40%, transparent 57%); pointer-events: none; }
+  .hero-photo { left: auto; right: 0; width: auto; max-width: none; height: 100%; object-fit: contain; object-position: right center; }
+  .machine-banner { height: 500px; background: #e6e8e8; }
+  .machine-banner::after { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(90deg, #e6e8e8 0 39%, #e6e8e8e8 47%, transparent 68%); pointer-events: none; }
+  .machine-banner > img { left: auto; right: 0; z-index: 0; width: auto; max-width: none; height: 100%; object-fit: contain; object-position: right center; }
+  .machine-caption { position: relative; z-index: 1; }
 }
 @media (max-width:1200px) {
   .container { width: calc(100% - 56px); }
