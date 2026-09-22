@@ -337,7 +337,7 @@ function locationBand() {
 
 function home() {
   searchMode = 'article';
-  return `<section class="hero"><picture><source media="(max-width:700px)" srcset="assets/hero-precision-mobile.jpg"><img class="hero-photo" src="assets/hero-precision.jpg" alt="Студийная композиция: шестерни трансмиссии и роликовый подшипник" fetchpriority="high" width="1942" height="809"></picture><div class="container hero-inner"><span class="eyebrow">ЭЛЬТОРГ · ЗАПЧАСТИ ДЛЯ JCB</span><h1>Запчасти<br>для техники <em>JCB.</em></h1><p class="hero-copy">Всё начинается с правильной детали.<br>Подберём её для вашей машины.</p><div class="hero-actions"><button class="button dark" data-scroll="#parts-catalog">Каталог запчастей${icon('arrow-down')}</button><button class="hero-search" data-scroll="#part-finder" title="Поиск по артикулу" aria-label="Поиск по артикулу">${icon('search')}</button></div><div class="hero-bottom"><span>ДВИГАТЕЛЬ · ГИДРАВЛИКА · ТРАНСМИССИЯ</span><a href="#catalog?category=transmission">Детали трансмиссии${icon('arrow-up-right')}</a></div></div></section>${finder()}<section class="container section categories-section" id="parts-catalog" tabindex="-1"><div class="section-top"><div><span class="section-index">ОТ МАЛОГО К БОЛЬШОМУ</span><h2>Найдётся для каждого узла.</h2></div><a class="text-link" href="#catalog">Все категории${icon('arrow-right')}</a></div>${categoryGrid()}</section>${productShowcases()}${company()}${locationBand()}${contactBand()}${brandStrip()}`;
+  return `<section class="hero"><picture><source media="(max-width:700px)" srcset="assets/hero-machinery-mobile-v2.jpg"><img class="hero-photo" src="assets/hero-machinery-v2.jpg" alt="Жёлтый экскаватор-погрузчик на светлой промышленной площадке" fetchpriority="high" width="2098" height="749"></picture><div class="container hero-inner"><span class="eyebrow">ЭЛЬТОРГ · ЗАПЧАСТИ ДЛЯ JCB</span><h1>Запчасти<br>для техники <em>JCB.</em></h1><p class="hero-copy">Всё начинается с правильной детали.<br>Подберём её для вашей машины.</p><div class="hero-actions"><button class="button dark" data-scroll="#parts-catalog">Каталог запчастей${icon('arrow-down')}</button><button class="hero-search" data-scroll="#part-finder" title="Поиск по артикулу" aria-label="Поиск по артикулу">${icon('search')}</button></div><div class="hero-bottom"><span>ДВИГАТЕЛЬ · ГИДРАВЛИКА · ТРАНСМИССИЯ</span><a href="#catalog?category=transmission">Детали трансмиссии${icon('arrow-up-right')}</a></div></div></section>${finder()}<section class="container section categories-section" id="parts-catalog" tabindex="-1"><div class="section-top"><div><span class="section-index">ОТ МАЛОГО К БОЛЬШОМУ</span><h2>Найдётся для каждого узла.</h2></div><a class="text-link" href="#catalog">Все категории${icon('arrow-right')}</a></div>${categoryGrid()}</section>${productShowcases()}${company()}${locationBand()}${contactBand()}${brandStrip()}`;
 }
 
 function matchingProducts(params) {
@@ -607,6 +607,10 @@ dialog.addEventListener('close', () => {
   document.body.classList.remove('modal-open');
   if (returnFocus?.isConnected) returnFocus.focus();
 });
+const header = document.querySelector('.site-header');
+const updateHeaderState = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+window.addEventListener('scroll', updateHeaderState, { passive: true });
+updateHeaderState();
 window.addEventListener('hashchange', () => {
   if (dialog.open) closeRequest();
   if (location.hash !== '#home') history.replaceState(null, '', '#home');
