@@ -67,7 +67,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .header-search input { width: 100%; min-width: 0; border: 0; outline: none; background: none; font-size: 14px; }
 .header-search:focus-within { border-color: var(--ink); }
 .header-phones { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
-.header-phone { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 1.1; font-weight: 650; white-space: nowrap; }
+.header-phone { display: flex; align-items: center; gap: 10px; font-size: 17px; line-height: 1.1; font-weight: 650; white-space: nowrap; }
 .header-phone small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 .navigation { display: flex; min-height: 56px; align-items: stretch; gap: 32px; border-top: 1px solid var(--line); font-size: 14px; font-weight: 550; }
 .navigation > a, .navigation > button { display: flex; align-items: center; gap: 8px; white-space: nowrap; padding: 0; }
@@ -499,7 +499,7 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
 @media (max-width:1200px) {
   .container { width: calc(100% - 56px); }
   .main-header { gap: 24px; }
-  .header-phone { font-size: 15px; }
+  .header-phone { font-size: 17px; }
   .navigation { gap: 24px; }
   .catalog-menu { left: 28px; right: 28px; }
   .hero h1 { font-size: 54px; }
