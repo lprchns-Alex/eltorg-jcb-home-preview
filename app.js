@@ -48,7 +48,7 @@ function productRow(product, compact = false) {
 }
 
 function finder() {
-  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Нужная деталь. Точный поиск.</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">По артикулу</button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">По названию</button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">По модели</button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div><button class="finder-help" data-request="Подбор по фото или серийному номеру">${icon('scan-line')}<span>Не знаете артикул?<strong>Подберём по фото</strong></span>${icon('arrow-up-right')}</button></div></section>`;
+  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Нужная деталь. Точный поиск.</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">По артикулу</button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">По названию</button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">По модели</button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div></div></section>`;
 }
 
 function searchPanel(mode) {
@@ -71,7 +71,7 @@ function productShowcases() {
 }
 
 function popularCarousel(cards) {
-  return `<section class="showcase-section" id="popular" aria-labelledby="popular-title" aria-roledescription="карусель"><div class="container section"><div class="section-top"><div><span class="section-index">ПРОВЕРЕННЫЕ РЕШЕНИЯ</span><h2 id="popular-title">Популярные товары</h2></div><a class="text-link" href="#catalog">Весь каталог${icon('arrow-right')}</a></div><div class="popular-viewport" id="popular-slides" tabindex="0" aria-label="Популярные запчасти">${cards}</div><div class="popular-controls"><div class="popular-pages" role="group" aria-label="Страницы популярных товаров"></div><span class="popular-counter" aria-hidden="true"></span><div class="popular-arrows"><button class="icon-button" type="button" data-carousel="pause" aria-label="Приостановить автопрокрутку" title="Приостановить автопрокрутку" aria-pressed="false">${icon('pause')}</button><button class="icon-button" type="button" data-carousel="prev" aria-controls="popular-slides" aria-label="Предыдущие товары" title="Предыдущие товары">${icon('arrow-left')}</button><button class="icon-button" type="button" data-carousel="next" aria-controls="popular-slides" aria-label="Следующие товары" title="Следующие товары">${icon('arrow-right')}</button></div></div><span class="sr-only popular-announcement" aria-live="polite" aria-atomic="true"></span></div></section>`;
+  return `<section class="showcase-section" id="popular" aria-labelledby="popular-title" aria-roledescription="карусель"><div class="container section"><div class="section-top"><div><span class="section-index">ПРОВЕРЕННЫЕ РЕШЕНИЯ</span><h2 id="popular-title">Популярные товары</h2></div><a class="text-link" href="#catalog">Весь каталог${icon('arrow-right')}</a></div><div class="popular-viewport" id="popular-slides" tabindex="0" aria-label="Популярные запчасти">${cards}</div><div class="popular-controls"><div class="popular-pages" role="group" aria-label="Страницы популярных товаров"></div><span class="popular-counter" aria-hidden="true"></span><div class="popular-arrows"><button class="icon-button" type="button" data-carousel="prev" aria-controls="popular-slides" aria-label="Предыдущие товары" title="Предыдущие товары">${icon('arrow-left')}</button><button class="icon-button" type="button" data-carousel="next" aria-controls="popular-slides" aria-label="Следующие товары" title="Следующие товары">${icon('arrow-right')}</button></div></div><span class="sr-only popular-announcement" aria-live="polite" aria-atomic="true"></span></div></section>`;
 }
 
 function initPopularCarousel() {
@@ -81,7 +81,6 @@ function initPopularCarousel() {
   const cards = [...viewport.children];
   const pages = section.querySelector('.popular-pages');
   const counter = section.querySelector('.popular-counter');
-  const pauseButton = section.querySelector('[data-carousel="pause"]');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let perPage = 3;
   let current = 0;
@@ -133,22 +132,12 @@ function initPopularCarousel() {
     restart();
   }
 
-  function updatePauseButton() {
-    const label = paused ? 'Включить автопрокрутку' : 'Приостановить автопрокрутку';
-    pauseButton.setAttribute('aria-label', label);
-    pauseButton.title = label;
-    pauseButton.setAttribute('aria-pressed', String(paused));
-    pauseButton.innerHTML = icon(paused ? 'play' : 'pause');
-    refreshIcons();
-  }
-
   section.addEventListener('click', event => {
     const pageButton = event.target.closest('[data-page]');
     const action = event.target.closest('[data-carousel]')?.dataset.carousel;
     if (pageButton) goTo(Number(pageButton.dataset.page), true);
     if (action === 'prev') goTo(current - 1, true);
     if (action === 'next') goTo(current + 1, true);
-    if (action === 'pause') { paused = !paused; updatePauseButton(); restart(); }
   });
   section.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovered = true; restart(); } });
   section.addEventListener('pointerleave', event => { if (event.pointerType === 'mouse') { hovered = false; restart(); } });
@@ -178,10 +167,9 @@ function initPopularCarousel() {
   observer.observe(viewport);
   const resize = new ResizeObserver(layout);
   resize.observe(viewport);
-  const onMotionChange = () => { if (reducedMotion.matches) paused = true; updatePauseButton(); restart(); };
+  const onMotionChange = () => { paused = reducedMotion.matches; restart(); };
   reducedMotion.addEventListener('change', onMotionChange);
   document.addEventListener('visibilitychange', restart);
-  updatePauseButton();
   layout();
   cleanupPopularCarousel = () => {
     clearInterval(timer);
@@ -197,7 +185,7 @@ function brandStrip() {
   // Additional manufacturers are an editorial selection pending assortment approval.
   const brands = ['JCB', 'Perkins', 'Gates', 'TIMKEN', 'HUSCO', 'CARRARO', 'ZF', 'SKF', 'Donaldson', 'BOSCH'];
   const group = copy => `<div class="brand-group" ${copy ? 'aria-hidden="true"' : ''}>${brands.map(brand => `<span class="brand-logo brand-logo--${brand.toLowerCase()}">${brand}</span>`).join('')}</div>`;
-  return `<section class="brands-band" aria-label="Бренды запчастей"><div class="container brands-heading"><span class="section-index">ИМЕНА, КОТОРЫЕ ЗНАЕТ ВАША ТЕХНИКА</span><button class="icon-button brand-motion" aria-label="Приостановить движение брендов" title="Приостановить движение брендов" aria-pressed="false">${icon('pause')}</button></div><div class="brand-window"><div class="brand-track">${group(false)}${group(true)}</div></div></section>`;
+  return `<section class="brands-band" aria-label="Бренды запчастей"><div class="container brands-heading"><span class="section-index">ИМЕНА, КОТОРЫЕ ЗНАЕТ ВАША ТЕХНИКА</span></div><div class="brand-window"><div class="brand-track">${group(false)}${group(true)}</div></div></section>`;
 }
 
 function requestFields(subject = '', productId = '') {
@@ -484,17 +472,6 @@ document.addEventListener('click', event => {
     const section = document.querySelector(scrollButton.dataset.scroll);
     section?.focus({ preventScroll: true });
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
-    return;
-  }
-  const motionButton = event.target.closest('.brand-motion');
-  if (motionButton) {
-    const paused = motionButton.closest('.brands-band').classList.toggle('is-paused');
-    motionButton.setAttribute('aria-pressed', String(paused));
-    const label = paused ? 'Продолжить движение брендов' : 'Приостановить движение брендов';
-    motionButton.setAttribute('aria-label', label);
-    motionButton.title = label;
-    motionButton.innerHTML = icon(paused ? 'play' : 'pause');
-    refreshIcons();
     return;
   }
   if (event.target.closest('.skip-link')) {
