@@ -328,7 +328,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .special-products .part-card h3 { min-height: 0; }
 .special-products .part-badge { color: #44535c; }
 
-.company-inner { padding-block: 72px; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 24px; }
+.company-inner { padding-block: 72px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
 .company-intro h2 { font-size: 36px; line-height: 1.25; }
 .company-intro > .text-link { margin-top: 26px; }
 .company-copy { padding-top: 0; }
