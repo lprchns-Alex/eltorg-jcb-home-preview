@@ -215,7 +215,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .location-shop p { font-size: 14px; color: var(--muted); margin-top: 14px; line-height: 1.65; }
 .location-shop p br { display: none; }
 .location-shop .text-link { margin-top: 12px; }
-.location-steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-top: 1px solid var(--line); margin-top: 30px; padding-top: 30px; gap: 32px; }
+.location-steps { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid var(--line); margin-top: 30px; padding-top: 30px; gap: 32px; }
 .location-steps > div { display: flex; align-items: flex-start; gap: 16px; }
 .location-steps > div > span { font-size: 28px; line-height: 1.2; font-weight: 500; color: #879da8; }
 .location-steps p { font-size: 16px; font-weight: 650; }

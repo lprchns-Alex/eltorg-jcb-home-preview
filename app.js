@@ -334,7 +334,7 @@ function locationBand() {
         <aside class="location-shop" aria-label="Магазин в Санкт-Петербурге"><span class="location-shop-kicker">${icon('map-pin')}МАГАЗИН ЭЛЬТОРГ</span><h3>Домостроительная, 16</h3><a class="location-shop-phone" href="tel:+79650894699">+7 (965) 089-46-99</a><p>Перед поездкой уточните часы работы и наличие нужной детали.</p><a class="text-link" href="https://yandex.ru/maps/?text=Санкт-Петербург%20Домостроительная%2016" target="_blank" rel="noopener">Построить маршрут${icon('arrow-up-right')}</a></aside>
       </div>
     </div>
-    <div class="location-steps"><div><span>01</span><p>Расскажите о задаче<strong>Артикул, фото или модель техники</strong></p></div><div><span>02</span><p>Согласуем деталь<strong>Исполнение, цену и наличие</strong></p></div><div><span>03</span><p>Обсудим получение<strong>Самовывоз или условия отправки</strong></p></div></div>
+    <div class="location-steps"><div><span>01</span><p>Расскажите о задаче<strong>Артикул, фото или модель техники</strong></p></div><div><span>02</span><p>Согласуем деталь<strong>Исполнение, цену и наличие</strong></p></div><div><span>03</span><p>Обсудим получение<strong>Самовывоз или условия отправки</strong></p></div><div><span>04</span><p>Доставим<strong>В согласованный срок и удобным способом</strong></p></div></div>
   </div></section>`;
 }
 
