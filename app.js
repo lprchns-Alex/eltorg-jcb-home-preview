@@ -67,7 +67,7 @@ function productCard(product, kind = 'catalog') {
 function productShowcases() {
   // Editorial demo selections, not verified sales rankings or arrival dates.
   const cards = (ids,kind) => ids.map(id=>productCard(products.find(product=>product.id===id),kind)).join('');
-  return `${popularCarousel(cards(['valve','crankshaft','starter','gear','alternator','tensioner'],'popular'))}<section class="new-section" id="new" aria-labelledby="new-title"><div class="container new-inner"><div class="new-copy"><span class="section-index">ЗНАКОМИМСЯ БЛИЖЕ</span><h2 id="new-title">Новинки</h2><p>Комплектующие для вашей следующей задачи. Подберём исполнение под конкретную машину.</p><a class="text-link" href="#catalog">Смотреть запчасти${icon('arrow-right')}</a><div class="new-caption">${icon('component')}<span>От отдельных деталей<br>до комплектующих узла</span></div></div><div class="new-products">${cards(['alternator','tensioner'],'new')}</div></div></section><section class="special-section" id="offers" aria-labelledby="special-title"><div class="container special-inner"><div class="special-copy"><span class="section-index">РАЗУМНЫЙ ПОДХОД К ОБСЛУЖИВАНИЮ</span><h2 id="special-title">Спецпредложения</h2><p>Обсудим специальные условия на детали для двигателя и регулярного обслуживания.</p><button class="button yellow" data-request="Специальные предложения на запчасти">Уточнить условия${icon('arrow-up-right')}</button></div><div class="special-products">${cards(['tensioner','crankshaft'],'special')}</div></div></section>`;
+  return `${popularCarousel(cards(['valve','crankshaft','starter','gear','alternator','tensioner'],'popular'))}<section class="new-section" id="new" aria-labelledby="new-title"><div class="container new-inner"><div class="new-copy"><span class="section-index">ЗНАКОМИМСЯ БЛИЖЕ</span><h2 id="new-title">Новинки</h2><p>Комплектующие для вашей следующей задачи. Подберём исполнение под конкретную машину.</p><a class="text-link" href="#catalog">Смотреть запчасти${icon('arrow-right')}</a><div class="new-caption">${icon('component')}<span>От отдельных деталей<br>до комплектующих узла</span></div></div><div class="new-products">${cards(['alternator','tensioner','starter'],'new')}</div></div></section><section class="special-section" id="offers" aria-labelledby="special-title"><div class="container special-inner"><div class="special-copy"><span class="section-index">РАЗУМНЫЙ ПОДХОД К ОБСЛУЖИВАНИЮ</span><h2 id="special-title">Спецпредложения</h2><p>Обсудим специальные условия на детали для двигателя и регулярного обслуживания.</p><button class="button yellow" data-request="Специальные предложения на запчасти">Уточнить условия${icon('arrow-up-right')}</button></div><div class="special-products">${cards(['tensioner','crankshaft','valve'],'special')}</div></div></section>`;
 }
 
 function popularCarousel(cards) {
@@ -91,6 +91,8 @@ function initPopularCarousel() {
   let visible = false;
   let paused = reducedMotion.matches;
 
+  const pageStart = index => Math.min(index * perPage, Math.max(0, cards.length - perPage));
+
   function update() {
     const bounds = viewport.getBoundingClientRect();
     cards.forEach(card => {
@@ -107,8 +109,9 @@ function initPopularCarousel() {
     current = (index + total) % total;
     // Card offsets are measured against the scroller, independent of page layout.
     const distance = cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(viewport).columnGap);
-    viewport.scrollTo({ left: current * perPage * distance, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
-    if (manual) section.querySelector('.popular-announcement').textContent = `Товары ${current * perPage + 1}–${Math.min((current + 1) * perPage, cards.length)} из ${cards.length}`;
+    const start = pageStart(current);
+    viewport.scrollTo({ left: start * distance, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+    if (manual) section.querySelector('.popular-announcement').textContent = `Товары ${start + 1}–${Math.min(start + perPage, cards.length)} из ${cards.length}`;
     restart();
   }
 
@@ -125,9 +128,9 @@ function initPopularCarousel() {
     total = Math.ceil(cards.length / perPage);
     cards.forEach((card, index) => { card.style.scrollSnapAlign = index % perPage === 0 ? 'start' : 'none'; });
     current = Math.min(Math.floor(firstIndex / perPage), total - 1);
-    if (pages.children.length !== total) pages.innerHTML = Array.from({ length: total }, (_, index) => `<button type="button" data-page="${index}" aria-label="Товары ${index * perPage + 1}–${Math.min((index + 1) * perPage, cards.length)}" aria-controls="popular-slides"><span></span></button>`).join('');
+    if (pages.children.length !== total) pages.innerHTML = Array.from({ length: total }, (_, index) => { const start = pageStart(index); return `<button type="button" data-page="${index}" aria-label="Товары ${start + 1}–${Math.min(start + perPage, cards.length)}" aria-controls="popular-slides"><span></span></button>`; }).join('');
     const distance = cards[0].getBoundingClientRect().width + parseFloat(getComputedStyle(viewport).columnGap);
-    viewport.scrollTo({ left: current * perPage * distance, behavior: 'instant' });
+    viewport.scrollTo({ left: pageStart(current) * distance, behavior: 'instant' });
     update();
     restart();
   }
@@ -227,7 +230,7 @@ function categoryGrid() {
       </div>
     </article>`;
   });
-  return `<div class="category-grid">${Array.from({ length: Math.ceil(cards.length / 3) }, (_, row) => `<div class="category-row">${cards.slice(row * 3, row * 3 + 3).join('')}</div>`).join('')}</div>`;
+  return `<div class="category-grid">${Array.from({ length: Math.ceil(cards.length / 4) }, (_, row) => `<div class="category-row">${cards.slice(row * 4, row * 4 + 4).join('')}</div>`).join('')}</div>`;
 }
 
 function initCategoryCards() {

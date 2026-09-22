@@ -251,7 +251,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .showcase-section { border-top: 1px solid #edf0f0; }
 .showcase-section .section { padding-block: 72px; }
 .parts-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; }
-.popular-viewport { --popular-visible: 3; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 48px) / 3); gap: 24px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 5px 0; }
+.popular-viewport { --popular-visible: 4; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 72px) / 4); gap: 24px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 5px 0; }
 .popular-viewport::-webkit-scrollbar { display: none; }
 .popular-viewport > .part-card { scroll-snap-align: start; }
 .popular-viewport :focus-visible { outline-offset: -3px; }
@@ -265,6 +265,9 @@ main:focus, section[tabindex]:focus { outline: none; }
 .popular-arrows { display: flex; gap: 8px; margin-left: auto; }
 .popular-arrows .icon-button { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 4px; }
 .popular-arrows .icon-button:hover { background: var(--paper); border-color: #aab3b7; }
+@media (min-width:1001px) and (max-width:1280px) {
+  .popular-viewport { --popular-visible: 3; grid-auto-columns: calc((100% - 48px) / 3); }
+}
 @media (min-width:601px) and (max-width:1000px) {
   .popular-viewport { --popular-visible: 2; grid-auto-columns: calc((100% - 24px) / 2); }
 }
@@ -299,22 +302,22 @@ main:focus, section[tabindex]:focus { outline: none; }
 .part-request svg { width: 17px; height: 17px; }
 .part-request:hover { background: var(--ink); color: white; border-color: var(--ink); }
 .new-section { background: #f0f2f2; }
-.new-inner { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); align-items: stretch; gap: 24px; padding-block: 72px; }
+.new-inner { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,3fr); align-items: stretch; gap: 24px; padding-block: 72px; }
 .new-copy { display: flex; flex-direction: column; align-items: flex-start; padding-right: 32px; }
 .new-copy h2 { font-size: 36px; line-height: 1.2; }
 .new-copy p { color: var(--muted); font-size: 16px; line-height: 1.8; margin-block: 24px 16px; max-width: 320px; }
 .new-caption { display: flex; gap: 15px; align-items: center; margin-top: auto; padding-top: 38px; font-size: 14px; color: #7c888e; }
 .new-caption svg { width: 29px; height: 29px; }
-.new-products { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.new-products { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
 .new-products .part-visual { background: #e6eaea; }
 .new-products .part-card h3 { min-height: 0; }
 .new-products .part-visual img { padding: 40px 32px 32px; }
 .special-section { background: #30383d; color: #fff; }
-.special-inner { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 24px; padding-block: 72px; align-items: start; }
+.special-inner { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,3fr); gap: 24px; padding-block: 72px; align-items: start; }
 .special-copy .section-index { color: #bac6cb; font-size: 14px; }
 .special-copy h2 { font-size: 36px; }
 .special-copy p { max-width: 320px; color: #bac6cb; font-size: 16px; margin-block: 24px 28px; line-height: 1.8; }
-.special-products { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.special-products { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
 .special-products .part-visual { background: #e7ebeb; aspect-ratio: 1; }
 .special-products .part-visual img { padding: 40px 32px 32px; }
 .special-products .part-category { color: #a3b0b7; }
@@ -578,6 +581,7 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .finder-help { max-width: 230px; }
   .new-inner { grid-template-columns: 1fr; gap: 32px; padding-block: 64px; }
   .special-inner { grid-template-columns: 1fr; gap: 32px; padding-block: 64px; }
+  .new-products, .special-products { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .special-copy { padding: 0; }
   .company-inner { grid-template-columns: 1fr; gap: 32px; padding-block: 64px; }
   .contact-band-inner { gap: 32px; padding-block: 64px; }
