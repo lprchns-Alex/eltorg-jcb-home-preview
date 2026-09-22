@@ -494,10 +494,7 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .hero > picture { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
   .hero > picture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #edf1f3 0 34%, #edf1f3e6 40%, transparent 57%); pointer-events: none; }
   .hero-photo { left: auto; right: 0; width: auto; max-width: none; height: 100%; object-fit: contain; object-position: right center; }
-  .machine-banner { height: 500px; background: #e6e8e8; }
-  .machine-banner::after { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(90deg, #e6e8e8 0 calc(100% - 1200px), #e6e8e8e8 calc(100% - 1040px), transparent calc(100% - 680px)); pointer-events: none; }
-  .machine-banner > img { left: auto; right: 0; z-index: 0; width: auto; max-width: none; height: 100%; object-fit: contain; object-position: right center; }
-  .machine-caption { position: relative; z-index: 1; }
+  .machine-banner { height: 580px; }
 }
 @media (max-width:1200px) {
   .container { width: calc(100% - 56px); }
