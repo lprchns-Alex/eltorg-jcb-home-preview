@@ -1,0 +1,131 @@
+.assembly-workspace { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+.machine-section { position: sticky; top: 165px; align-self: start; }
+.machine-toolbar { gap: 12px; }
+.machine-toolbar > span { margin-right: auto; }
+.all-nodes { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 4px; font-size: 12px; min-height: 44px; }
+.all-nodes[aria-pressed=true] { background: #fff1a6; }
+.all-nodes svg { width: 16px; height: 16px; }
+.all-nodes > span { font-size: 11px; color: #687378; }
+#scheme-mount .machine-drawing { width: min(100%, max(360px, calc((100dvh - 380px) * 1.3158))); margin-inline: auto; }
+.assembly-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 24px; padding-top: 12px; }
+.assembly-legend button { align-items: center; min-height: 40px; padding: 8px 6px; border-radius: 4px; }
+.assembly-legend button small { margin-left: auto; font-size: 11px; color: #8b969c; font-weight: 400; }
+.assembly-legend button[aria-pressed=true] { background: #fff8d8; }
+.assembly-legend button[aria-pressed=true] b { background: none; }
+.parts-section { padding-top: 24px; }
+.parts-heading { justify-content: space-between; min-height: 56px; }
+.parts-heading h2 { font-size: 26px; }
+.results-total { font-size: 18px; color: #677980; font-weight: 500; font-variant-numeric: tabular-nums; }
+.filter-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; }
+.filter-summary .parts-summary { margin: 12px 0; min-height: 0; overflow-wrap: anywhere; }
+.clear-filters { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); flex-shrink: 0; padding: 8px 0; }
+.clear-filters svg { width: 14px; height: 14px; }
+.parts-list { min-height: 0; }
+.part-group { margin-bottom: 24px; }
+.part-group-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 42px; padding: 10px 12px; background: #f0f3f3; font-size: 12px; font-weight: 650; }
+.part-group-heading b { color: #7f9199; font-size: 11px; font-weight: 500; margin-right: 9px; }
+.part-group-heading > span:last-child { color: #849197; font-weight: 400; }
+.part-row { grid-template-columns: 78px minmax(0, 1fr) 32px; gap: 16px; padding: 14px 0; border-top: 0; border-bottom: 1px solid var(--line); min-height: 108px; }
+.part-thumbnail { display: block; position: relative; width: 78px; height: 78px; background: transparent; border-radius: 4px; overflow: hidden; flex-shrink: 0; }
+.tile-photo::before { content: ''; position: absolute; inset: 5px; background-image: url('assets/assembly-parts-cutouts-v2.png'); background-size: 400% 400%; background-position: var(--photo-x) var(--photo-y); background-repeat: no-repeat; }
+.part-thumbnail img { width: 100%; height: 100%; object-fit: contain; }
+.part-metadata { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.part-metadata > span { min-width: 0; overflow-wrap: anywhere; }
+.part-article, .part-manufacturer { color: #42535b; }
+.tile-photo[data-preview="belt"]::before { clip-path: inset(0 0 15% 8%); }
+.part-row strong { font-size: 14px; line-height: 1.4; }
+.part-row small { font-size: 11px; margin-top: 6px; }
+.part-availability { display: block; font-size: 11px; color: #728a80; margin-top: 5px; }
+.part-action { width: 30px; height: 36px; display: flex; align-items: center; justify-content: center; color: #778a93; }
+.part-action svg { width: 18px; }
+.assembly-assistance { margin-top: 16px; }
+.assembly-footnote a { white-space: normal; font-size: 12px; }
+/* Desktop catalogue occupies one viewport; only the results list scrolls. */
+@media (min-width: 981px) {
+  .assembly-page { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+  .assembly-page .site-header { position: relative; flex-shrink: 0; }
+  #assembly-main { flex: 1; min-height: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding-bottom: 18px; }
+  .assembly-breadcrumbs { padding-top: 16px; }
+  .assembly-heading { padding: 18px 0 24px; }
+  .assembly-workspace { min-height: 0; }
+  .machine-section { position: static; align-self: stretch; min-height: 0; display: grid; grid-template-rows: 44px minmax(0, 1fr) auto; padding-block: 16px 12px; }
+  #scheme-mount { min-height: 0; container-type: size; display: grid; place-items: center; }
+  #scheme-mount .machine-drawing { width: min(100cqw, calc(100cqh * 1.315789)); }
+  .assembly-legend { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 12px; padding-top: 8px; }
+  .assembly-legend button { min-height: 36px; font-size: 11px; gap: 5px; }
+  .parts-section { min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-block: 16px 12px; }
+  .parts-heading, .filter-summary, .assembly-assistance { flex-shrink: 0; }
+  .parts-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; padding-right: 10px; }
+  .parts-list:focus-visible { outline: 2px solid #587884; outline-offset: -2px; }
+  .assembly-assistance { margin-top: 12px; padding-block: 12px; }
+  .assembly-footnote { padding: 12px 0 16px; gap: 20px; }
+}
+@media (min-width: 981px) and (max-width: 1200px) {
+  .assembly-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .assembly-legend button { min-height: 30px; }
+}
+@media (min-width: 981px) and (max-height: 860px) {
+  .assembly-page .main-header { min-height: 76px; }
+  .assembly-nav { min-height: 44px; }
+  .assembly-heading { padding: 12px 0 16px; }
+  .assembly-heading .section-index { margin-bottom: 6px; }
+  .assembly-heading h1 { font-size: 30px; }
+  .assembly-assistance { padding: 8px 12px; }
+  .assembly-assistance p { display: none; }
+  .parts-heading { min-height: 48px; }
+  .filter-summary { min-height: 42px; }
+}
+@media (max-width: 1200px) { .part-row { grid-template-columns: 64px minmax(0,1fr) 28px; gap: 12px; } .part-thumbnail { width: 64px; height: 64px; } .parts-heading h2 { font-size: 23px; } .assembly-legend { gap: 0 10px; } }
+@media (max-width: 980px) { .assembly-workspace { grid-template-columns: minmax(0,1fr); } .machine-section { position: static; } #scheme-mount .machine-drawing { width: min(100%, 660px); } .assembly-legend { grid-template-columns: repeat(4,minmax(0,1fr)); } .part-row { grid-template-columns: 78px minmax(0,1fr) 32px; } .part-thumbnail { width: 78px; height: 78px; } }
+@media (max-width: 600px) { .assembly-legend { grid-template-columns: repeat(2,minmax(0,1fr)); } .assembly-legend button { min-height: 44px; } .parts-heading h2 { font-size: 24px; } .part-row { grid-template-columns: 64px minmax(0,1fr) 24px; gap: 10px; min-height: 106px; } .part-thumbnail { width: 64px; height: 64px; } .part-row strong { font-size: 13px; } .part-action { width: 24px; } .all-nodes { padding-inline: 8px; } .assembly-heading h1 { font-size: 27px; } }
+
+/* Match the homepage header without altering the saved assembly-page variant. */
+.catalog-page .container { width: min(1400px, calc(100% - 96px)); }
+.catalog-page .main-header { min-height: 96px; gap: 32px; flex-wrap: nowrap; padding-block: 0; }
+.catalog-page .header-phones { display: flex; flex-direction: row; align-items: center; gap: 24px; }
+.catalog-page .header-phone { width: auto; height: auto; border: 0; font-size: 17px; }
+.catalog-page .header-phone small { display: block; font-size: 12px; }
+.catalog-page .header-phone > span { display: block; }
+.catalog-page .header-search { order: initial; flex: 1; width: auto; margin-inline: auto; }
+.catalog-page .brand-word { font-size: 27px; }
+.catalog-page .brand-word small { font-size: 14px; }
+@media (max-width: 1200px) {
+  .catalog-page .container { width: calc(100% - 56px); }
+  .catalog-page .main-header { gap: 24px; }
+}
+@media (max-width: 980px) {
+  .catalog-page .header-phone { font-size: 14px; }
+  .catalog-page .header-search { margin: 0; }
+  .catalog-page .site-header { position: sticky; }
+}
+@media (max-width: 700px) {
+  .catalog-page .container { width: calc(100% - 36px); }
+  .catalog-page .main-header { min-height: 88px; gap: 8px; flex-wrap: wrap; padding-block: 16px; }
+  .catalog-page .brand-word { font-size: 23px; }
+  .catalog-page .header-phones { display: block; margin-left: auto; }
+  .catalog-page .header-phone { width: 44px; height: 44px; border: 1px solid var(--line); }
+  .catalog-page .header-phone + .header-phone { display: none; }
+  .catalog-page .header-phone > span { display: none; }
+  .catalog-page .header-search { display: none; order: 5; flex-basis: 100%; margin: 10px 0 0; }
+  .catalog-page .header-search.expanded { display: flex; }
+  .catalog-page #assembly-main { padding-bottom: 24px; }
+}
+
+.catalog-page .footer { flex-shrink: 0; }
+.catalog-page .part-row { grid-template-columns: 78px minmax(0, 1fr) 142px; }
+.part-commercial { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+.part-commercial .part-availability { margin-top: 0; }
+.part-price { color: #252b2e; font-size: 23px; font-weight: 650; line-height: 1.2; white-space: nowrap; }
+@media (min-width: 981px) and (max-width: 1200px) {
+  .catalog-page .part-row { grid-template-columns: 64px minmax(0, 1fr); }
+  .part-commercial { grid-column: 2; align-items: flex-start; text-align: left; }
+}
+@media (max-width: 600px) {
+  .catalog-page .part-row { grid-template-columns: 64px minmax(0, 1fr); }
+  .part-commercial { grid-column: 2; align-items: flex-end; padding-top: 4px; }
+  .part-price { font-size: 22px; }
+}
+@media (min-width: 981px) {
+  .catalog-page { height: auto; min-height: 100dvh; overflow: visible; }
+  .catalog-page #assembly-main { flex: none; height: calc(100dvh - 153px); min-height: 540px; }
+}

@@ -1,0 +1,5 @@
+# Transparent catalogue previews
+
+Asset: `assembly-parts-cutouts-v2.png`, generated with built-in image_gen, 1254 x 1254 pixels, alpha channel verified with sips. Illustrative product cutouts, not verified photographs of individual SKUs. Source sprite retained; only the current catalogue variant consumes this atlas.
+
+Prompt: Create a genuinely transparent PNG sprite atlas of sixteen realistic machinery spare-part photos in a regular 4 x 4 grid. No backdrop, shadow, floor, labels or borders. Equal cells, centered isolated objects with generous transparent margins. Row 1: steel pivot pins, cylindrical bushings, adjustment washers, bolts and circlips. Row 2: hydraulic hose, sealing ring kit, yellow oil filter, framed cab window. Row 3: yellow bucket teeth, isolated black serpentine drive belt arranged as an oval, belt tensioner, engine crankshaft. Row 4: starter motor, alternator, ring gear and pinion, hydraulic valve block. Consistent premium product lighting and clean transparent edges, no object crosses its cell.
