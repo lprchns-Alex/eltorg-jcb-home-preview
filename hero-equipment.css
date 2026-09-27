@@ -1,0 +1,62 @@
+.machine-banner { height: auto; aspect-ratio: 2163 / 727; }
+.machine-banner > picture { position: absolute; inset: 0; z-index: -1; }
+.machine-banner > picture > img { width: 100%; height: 100%; object-fit: cover; }
+.machine-banner .machine-caption { position: absolute; inset: 0; }
+@media (max-width: 700px) {
+  .machine-banner { aspect-ratio: 3 / 4; }
+  .machine-banner .machine-caption { justify-content: flex-start; padding-top: 32px; }
+}
+.hero.hero-equipment { height: clamp(650px, calc(100vw / 3 + 100px), 960px); min-height: 650px; background: #eaebeb; }
+.hero-equipment > picture { position: absolute; inset: 0 0 100px; z-index: -1; overflow: hidden; }
+.hero-equipment > picture::after { display: none; }
+.hero-equipment .hero-photo { content: normal; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: right center; }
+.hero-equipment .hero-inner { height: calc(100% - 100px); padding-top: 64px; padding-bottom: 40px; }
+.hero-equipment h1 { font-size: 64px; line-height: 1.12; max-width: 630px; margin-top: 30px; }
+.hero-equipment .hero-copy { display: block; font-size: 16px; margin-top: 24px; }
+.hero-equipment .hero-actions { margin-top: 30px; }
+.equipment-brands { position: absolute; bottom: 0; width: 100%; height: 100px; border-top: 1px solid #cbd0d0; background: #f5f6f5; }
+.equipment-brands-inner { display: flex; align-items: center; gap: 28px; height: 100%; }
+.equipment-brands-label { flex: 0 0 140px; font-size: 11px; font-weight: 650; color: #6a757b; }
+.equipment-brand-window { min-width: 0; flex: 1; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.equipment-brand-window::-webkit-scrollbar { display: none; }
+.equipment-brand-track { display: flex; width: max-content; align-items: center; }
+.equipment-brand { display: grid; place-items: center; flex: 0 0 190px; width: 190px; min-height: 60px; padding: 8px 16px; white-space: nowrap; scroll-snap-align: start; color: #39474c; font-size: 26px; font-weight: 750; }
+.equipment-brand { font-size: 23px; }
+.equipment-brand:hover { background: #fff0c2; color: #222527; }
+.equipment-brand:focus-visible { outline-offset: -4px; }
+.equipment-brand[aria-label="Запчасти для JCB"] { font-style: italic; font-size: 30px; }
+.equipment-brand[aria-label="Запчасти для Caterpillar (CAT)"] { font-size: 19px; }
+.equipment-brand[aria-label="Запчасти для New Holland"] { font-size: 21px; }
+.equipment-brand-controls { display: flex; gap: 8px; }
+.equipment-brand-controls .icon-button { width: 38px; height: 38px; background: transparent; }
+@media (min-width: 2000px) {
+  .hero-equipment .hero-inner { padding-top: 90px; }
+  .hero-equipment h1 { font-size: 70px; }
+}
+@media (min-width: 701px) and (max-width: 1200px) {
+  .hero-equipment h1 { font-size: 46px; max-width: 460px; }
+  .hero-equipment .hero-inner { padding-top: 48px; }
+  .equipment-brands-label { flex-basis: 110px; }
+  .equipment-brands-inner { gap: 16px; }
+}
+@media (max-width: 700px) {
+  .hero.hero-equipment { height: calc(100vw * 1.333333 + 104px); min-height: 0; }
+  .hero-equipment > picture { bottom: 104px; }
+  .hero-equipment .hero-photo { object-position: center bottom; object-fit: cover; }
+  .hero-equipment .hero-inner { height: calc(100% - 104px); padding-top: 20px; padding-bottom: 20px; }
+  .hero-equipment .eyebrow { font-size: 10px; }
+  .hero-equipment h1 { font-size: 34px; max-width: 100%; margin-top: 14px; }
+  .hero-equipment .hero-copy { font-size: 14px; margin-top: 12px; line-height: 1.5; }
+  .hero-equipment .hero-actions { margin-top: 14px; }
+  .equipment-brands { height: 104px; }
+  .equipment-brands-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; padding-block: 12px; }
+  .equipment-brands-label { grid-column: 1 / -1; font-size: 10px; }
+  .equipment-brand { width: 155px; flex-basis: 155px; min-height: 48px; font-size: 21px; }
+  .equipment-brand--2, .equipment-brand--5 { font-size: 17px; }
+  .equipment-brand-controls { gap: 4px; }
+  .equipment-brand-controls .icon-button { width: 30px; height: 32px; }
+}
+@media (max-width: 380px) {
+  .hero-equipment h1 { font-size: 28px; }
+  .hero-equipment .hero-copy { font-size: 12px; }
+}
