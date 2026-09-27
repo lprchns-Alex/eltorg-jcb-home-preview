@@ -25,6 +25,40 @@ const products = [
   { id: 'switch', name: 'Подрулевой переключатель', article: '', category: 'electrics', price: 15000, brand: '', image: 'switch.jpg' },
   { id: 'belt', name: 'Ремни генератора', article: '', category: 'engine', price: 2500, brand: '', image: 'belt.jpg' },
 ].map(product => ({ ...product, equipmentBrands: ['JCB'] }));
+// Illustrative inventory for the client preview, not verified articles or fitment.
+products.push(...[
+  ["filter-kit","Комплект фильтров ТО","filters",6800,"JCB",""],
+  ["hydraulic-pump","Насос гидравлический","hydraulics",48500,"Case",""],
+  ["bucket-teeth","Зубья ковша, комплект","equipment",7400,"Caterpillar (CAT)",""],
+  ["track-roller","Ролик опорный","undercarriage",12900,"Komatsu",""],
+  ["injector","Форсунки топливные, комплект","fuel",32000,"New Holland",""],
+  ["wheel-set","Колесо в сборе","wheels",46500,"Terex",""],
+  ["pin-kit","Палец и втулки, комплект","pins",5900,"Hidromek",""],
+  ["seal-kit","Комплект сальников","seals",2800,"MST",""],
+  ["cab-glass","Стекло кабины","cabin",18500,"JCB",""],
+  ["engine-assembly","Двигатель в сборе","engine",385000,"JCB",""],
+  ["starter-heavy","Стартер редукторный","electrics",24500,"Case","starter-studio.jpg"],
+  ["alternator-24","Генератор 24 В","electrics",21900,"Terex","alternator-studio.jpg"],
+  ["bucket-60","Ковш 600 мм","equipment",47500,"JCB","bucket.jpg"],
+  ["gear-set","Главная пара моста","transmission",28700,"Hidromek","gear-studio.jpg"],
+  ["belt-kit","Комплект приводных ремней","engine",3900,"New Holland","belt.jpg"],
+  ["tensioner-assembly","Натяжитель ремня в сборе","engine",6500,"MST","tensioner-studio.jpg"],
+  ["control-valve","Распределитель гидравлический","hydraulics",178000,"Komatsu","valve-studio.jpg"],
+  ["crankshaft-assembly","Коленчатый вал двигателя","engine",78000,"Caterpillar (CAT)","crankshaft-studio.jpg"],
+  ["filter-service","Фильтры для обслуживания","filters",8200,"Case",""],
+  ["axle-assembly","Мост ведущий в сборе","transmission",196000,"Terex",""],
+  ["track-roller-heavy","Опорный ролик усиленный","undercarriage",16700,"Caterpillar (CAT)",""],
+  ["injectors-service","Комплект форсунок двигателя","fuel",36500,"Komatsu",""],
+  ["wheel-industrial","Колесо индустриальное","wheels",52000,"New Holland",""],
+  ["pin-service","Комплект шарнирного соединения","pins",7200,"JCB",""],
+  ["seal-service","Уплотнения гидроцилиндра","seals",3400,"Hidromek",""],
+  ["glass-side","Боковое стекло кабины","cabin",12900,"MST",""],
+  ["bucket-crowns","Коронки ковша, комплект","equipment",9600,"Terex",""],
+].map(([id, name, category, price, equipmentBrand, image], index) => ({
+  id, name, category, price, image, brand: '', demo: true,
+  article: 'DEMO-' + String(index + 1001),
+  equipmentBrands: [equipmentBrand]
+})));
 const main = document.querySelector('#main');
 const dialog = document.querySelector('#request-dialog');
 const money = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
@@ -162,12 +196,19 @@ function searchForm(mode) {
   return `<form class="search-large finder-search" data-search><label class="finder-input"><span class="sr-only">${mode === 'article' ? 'Артикул запчасти' : 'Название запчасти'}</span><input name="q" type="search" placeholder="${mode === 'article' ? 'Введите артикул запчасти' : 'Введите название детали'}" autocomplete="off" required></label>${submit}</form>`;
 }
 
+function productPreview(product) {
+  if (product.demo && !product.image) {
+    const index = categories.findIndex(category => category.id === product.category);
+    return `<span class="part-sprite" role="img" aria-label="${escapeHtml(product.name)} — иллюстрация" style="--category-sheet:url('assets/categories${index >= 6 ? '-extra' : ''}.jpg');--art-x:${index % 3 * 50}%;--art-y:${Math.floor(index % 6 / 3) * 100}%"></span>`;
+  }
+  const studio = ['valve','crankshaft','starter','gear','alternator','tensioner'].includes(product.id);
+  return `<img src="assets/${studio ? product.id + '-studio.jpg' : product.image}" alt="${escapeHtml(product.name)}" loading="lazy" width="500" height="500">`;
+}
+
 function productCard(product, kind = 'catalog') {
   const category = categories.find(item => item.id === product.category);
-  const studio = ['valve','crankshaft','starter','gear','alternator','tensioner'].includes(product.id);
-  const image = studio ? product.id + '-studio.jpg' : product.image;
-  const badge = { popular: 'Выбор покупателей', new: 'Новинка', special: 'Особые условия' }[kind] || '';
-  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}<img src="assets/${image}" alt="${escapeHtml(product.name)}${studio ? ' — визуализация' : ''}" loading="lazy" width="500" height="500"><span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><span class="part-category">${category.name}${product.brand ? ' / ' + product.brand : ''}</span><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-product="${product.id}" aria-label="Запросить: ${escapeHtml(product.name)}" title="Запросить деталь">${icon('plus')}</button></div></div></article>`;
+  const badge = { popular: 'Выбор покупателей', new: 'Новинка', special: 'Особые условия' }[kind] || (product.demo ? 'Демо' : '');
+  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}${productPreview(product)}<span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><span class="part-category">${category.name}${product.brand ? ' / ' + product.brand : ''}</span><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-product="${product.id}" aria-label="Запросить: ${escapeHtml(product.name)}" title="Запросить деталь">${icon('plus')}</button></div></div></article>`;
 }
 
 function productShowcases() {
@@ -502,14 +543,13 @@ function catalog(params) {
   const brandOptions = ['', ...equipmentBrandOptions];
   return `<div class="container">
     ${breadcrumbs([{ name: 'Каталог запчастей', ...(equipmentBrand || category || query ? { href: '#catalog' } : {}) }, ...(equipmentBrand ? [{ name: equipmentBrand }] : [])])}
-    <div class="inner-heading"><span class="section-index">ЗАПЧАСТИ ДЛЯ СПЕЦТЕХНИКИ</span><h1>${heading}</h1><p>${query ? `По запросу «${escapeHtml(query)}»` : 'Выберите деталь. Точное исполнение и совместимость проверим по серийному номеру техники.'}</p></div>
+    <div class="inner-heading"><h1>${heading}</h1><p>${query ? `По запросу «${escapeHtml(query)}»` : 'Выберите деталь. Точное исполнение и совместимость проверим по серийному номеру техники.'}</p></div>
     <nav class="catalog-brands" aria-label="Бренды техники">${brandOptions.map(brand => `<a href="${catalogHref(params, { equipmentBrand: brand })}" ${brand === equipmentBrand ? 'aria-current="true"' : ''}>${brand || 'Все бренды'}</a>`).join('')}</nav>
     <div class="catalog-layout">
       <aside class="catalog-sidebar"><div class="filter-title">КАТЕГОРИИ</div><nav class="category-filter" aria-label="Категории каталога"><a href="${catalogHref(params, { category: '' })}" class="${!category ? 'active' : ''}">Все запчасти</a>${categories.map(item => `<a href="${catalogHref(params, { category: item.id })}" class="${category?.id === item.id ? 'active' : ''}" ${category?.id === item.id ? 'aria-current="page"' : ''}>${item.name}</a>`).join('')}</nav></aside>
       <div class="catalog-results">
-        <form class="search-large" data-search>${icon('search')}<input name="q" type="search" aria-label="Поиск запчастей" placeholder="Артикул или название" value="${escapeHtml(query)}" autocomplete="off">${category ? `<input name="category" type="hidden" value="${category.id}">` : ''}${equipmentBrand ? `<input name="equipmentBrand" type="hidden" value="${escapeHtml(equipmentBrand)}">` : ''}<button class="button dark">Найти${icon('arrow-right')}</button></form>
         <div class="catalog-toolbar"><span role="status" id="result-count">Найдено позиций: ${resultCount}</span><select id="sort" aria-label="Сортировка"><option value="default">По умолчанию</option><option value="price-asc" ${sortMode === 'price-asc' ? 'selected' : ''}>Сначала дешевле</option><option value="price-desc" ${sortMode === 'price-desc' ? 'selected' : ''}>Сначала дороже</option><option value="name" ${sortMode === 'name' ? 'selected' : ''}>По названию</option></select></div>
-        <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Актуальную цену, наличие и совместимость подтвердит менеджер перед заказом.</p>
+        <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Позиции с отметкой «Демо» добавлены для примера: фото, артикулы, цены и применимость условные. Актуальные данные подтвердит менеджер.</p>
       </div>
     </div>
   </div>${assistance()}`;
@@ -520,7 +560,7 @@ function productPage(params) {
   if (!product) return notFound();
   const category = categories.find(item => item.id === product.category);
   const studio = ['valve','crankshaft','starter','gear','alternator','tensioner'].includes(product.id);
-  return `<div class="container">${breadcrumbs([{ name: 'Каталог', href: '#catalog' }, { name: category.name, href: '#catalog?category=' + category.id }, { name: product.name }])}<div class="product-detail"><div class="detail-gallery"><div class="detail-image"><img id="detail-photo" src="assets/${studio ? product.id + '-studio.jpg' : product.image}" alt="${escapeHtml(product.name)}${studio ? ' — визуализация' : ''}" width="600" height="600"></div>${studio ? `<div class="gallery-controls" role="group" aria-label="Изображения товара"><button data-gallery="studio" aria-pressed="true" aria-label="Студийная визуализация" title="Студийная визуализация"><img src="assets/${product.id}-studio.jpg" alt="" width="66" height="66"></button><button data-gallery="original" aria-pressed="false" aria-label="Исходное фото товара" title="Исходное фото товара"><img src="assets/${product.image}" alt="" width="66" height="66"></button></div>` : ''}<p class="gallery-caption" aria-live="polite">${studio ? 'Студийная ИИ-визуализация. Точное исполнение смотрите на исходном фото.' : 'Фото из каталога Эльторг.'}</p></div><div class="detail-info"><span class="section-index">${category.name.toUpperCase()}</span><h1>${escapeHtml(product.name)}</h1><div class="stock">Наличие уточняется у менеджера</div><dl class="detail-specs"><div><dt>Артикул</dt><dd>${product.article || 'Уточним при подборе'}</dd></div>${product.brand ? `<div><dt>Производитель</dt><dd>${product.brand}</dd></div>` : ''}<div><dt>Применимость</dt><dd>Проверим по серийному номеру</dd></div><div><dt>Получение</dt><dd>Магазин в Санкт-Петербурге</dd></div></dl><div class="price">${money(product.price)}<small>Цена из каталога. Актуальную стоимость подтвердит менеджер.</small></div><button class="button yellow" data-product="${product.id}">Оставить заявку на деталь${icon('arrow-up-right')}</button><p class="detail-note">Уточним комплектацию, совместимость и условия получения. Для точного подбора подготовьте серийный номер техники.</p></div></div></div>${assistance()}`;
+  return `<div class="container">${breadcrumbs([{ name: 'Каталог', href: '#catalog' }, { name: category.name, href: '#catalog?category=' + category.id }, { name: product.name }])}<div class="product-detail"><div class="detail-gallery"><div class="detail-image">${product.demo ? productPreview(product) : `<img id="detail-photo" src="assets/${studio ? product.id + '-studio.jpg' : product.image}" alt="${escapeHtml(product.name)}${studio ? ' — визуализация' : ''}" width="600" height="600">`}</div>${studio ? `<div class="gallery-controls" role="group" aria-label="Изображения товара"><button data-gallery="studio" aria-pressed="true" aria-label="Студийная визуализация" title="Студийная визуализация"><img src="assets/${product.id}-studio.jpg" alt="" width="66" height="66"></button><button data-gallery="original" aria-pressed="false" aria-label="Исходное фото товара" title="Исходное фото товара"><img src="assets/${product.image}" alt="" width="66" height="66"></button></div>` : ''}<p class="gallery-caption" aria-live="polite">${product.demo ? 'Демонстрационная позиция: фото, артикул, цена и применимость условные.' : studio ? 'Студийная ИИ-визуализация. Точное исполнение смотрите на исходном фото.' : 'Фото из каталога Эльторг.'}</p></div><div class="detail-info"><span class="section-index">${category.name.toUpperCase()}</span><h1>${escapeHtml(product.name)}</h1><div class="stock">Наличие уточняется у менеджера</div><dl class="detail-specs"><div><dt>Артикул</dt><dd>${product.article || 'Уточним при подборе'}</dd></div>${product.brand ? `<div><dt>Производитель</dt><dd>${product.brand}</dd></div>` : ''}<div><dt>Применимость</dt><dd>Проверим по серийному номеру</dd></div><div><dt>Получение</dt><dd>Магазин в Санкт-Петербурге</dd></div></dl><div class="price">${money(product.price)}<small>Цена из каталога. Актуальную стоимость подтвердит менеджер.</small></div><button class="button yellow" data-product="${product.id}">Оставить заявку на деталь${icon('arrow-up-right')}</button><p class="detail-note">Уточним комплектацию, совместимость и условия получения. Для точного подбора подготовьте серийный номер техники.</p></div></div></div>${assistance()}`;
 }
 
 function contacts() {
@@ -548,6 +588,7 @@ function renderRoute() {
   main.innerHTML = page === 'catalog' ? catalog(params) : home();
   document.title = (page === 'home' ? 'Запчасти для спецтехники' : main.querySelector('h1')?.textContent || 'Запчасти для спецтехники') + ' — Эльторг';
   document.querySelector('.navigation').classList.remove('open');
+  document.querySelector('.header-search input[name="q"]').value = page === 'catalog' ? params.get('q') || '' : '';
   document.querySelector('.mobile-menu').setAttribute('aria-expanded', 'false');
   setCatalogOpen(false);
   refreshIcons();
@@ -561,7 +602,7 @@ function renderRoute() {
 function openRequest(subject, productId) {
   const product = products.find(item => item.id === productId);
   returnFocus = document.activeElement;
-  const selected = product ? `<div class="request-selection"><img src="assets/${product.image}" alt=""><div><strong>${escapeHtml(product.name)}</strong><small>${product.article ? `Артикул ${product.article} · ` : ''}${money(product.price)}</small></div></div>` : '';
+  const selected = product ? `<div class="request-selection">${productPreview(product)}<div><strong>${escapeHtml(product.name)}</strong><small>${product.demo ? 'Демо · ' : ''}${product.article ? `Артикул ${product.article} · ` : ''}${money(product.price)}</small></div></div>` : '';
   const message = product ? `${product.name}${product.article ? ', артикул ' + product.article : ''}` : subject || '';
   document.querySelector('#request-body').innerHTML = `<div class="dialog-kicker">ЭЛЬТОРГ / ПОДБОР ЗАПЧАСТЕЙ</div><h2 id="request-title" class="request-heading">Разберёмся в деталях.</h2><p class="request-intro">Оставьте контакт и расскажите, что нужно вашей технике.</p>${selected}${requestFields(message, product?.id || '')}`;
   refreshIcons();
@@ -724,7 +765,8 @@ document.addEventListener('submit', event => {
     event.preventDefault();
     const data = new FormData(event.target);
     const query = String(data.get('q') || '').trim();
-    const params = new URLSearchParams();
+    const route = currentRoute();
+    const params = route.page === 'catalog' ? new URLSearchParams(route.params) : new URLSearchParams();
     for (const key of ['category', 'equipmentBrand']) {
       if (data.get(key)) params.set(key, String(data.get(key)));
     }

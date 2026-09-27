@@ -316,6 +316,11 @@ main:focus, section[tabindex]:focus { outline: none; }
 .part-visual { position: relative; display: block; overflow: hidden; background: var(--paper); aspect-ratio: 1; }
 .part-visual img { width: 100%; height: 100%; padding: 36px 22px 22px; object-fit: contain; mix-blend-mode: darken; transition: transform .5s cubic-bezier(.2,.6,.25,1); }
 .part-card:hover .part-visual img { transform: scale(1.04); }
+.part-sprite { display: block; width: 100%; aspect-ratio: 1; background-image: var(--category-sheet); background-size: 300% 200%; background-position: var(--art-x) var(--art-y); background-repeat: no-repeat; mix-blend-mode: multiply; }
+.part-visual > .part-sprite { position: absolute; width: 78%; left: 11%; top: 11%; transition: transform .5s cubic-bezier(.2,.6,.25,1); }
+.part-card:hover .part-sprite { transform: scale(1.04); }
+.request-selection > .part-sprite { width: 72px; flex: 0 0 72px; }
+.catalog-results > .catalog-toolbar { margin-top: 0; }
 .part-badge { position: absolute; left: 16px; top: 14px; z-index: 1; max-width: calc(100% - 32px); font-size: 14px; line-height: 1.4; font-weight: 600; color: #53636c; }
 .part-card--new .part-badge { color: #547369; }
 .part-card--new .part-badge:before { content: ''; display: inline-block; width: 4px; height: 4px; background: #5f8a76; margin-right: 7px; vertical-align: 2px; }
