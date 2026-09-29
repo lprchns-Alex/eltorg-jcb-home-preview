@@ -1,4 +1,5 @@
 .stacked-page { display: block; height: auto; overflow: visible; }
+.stacked-page .site-header { position: sticky; top: 0; z-index: 30; }
 .stacked-page #assembly-main { display: block; height: auto; min-height: 0; padding-bottom: 48px; }
 .stacked-page .assembly-workspace { display: block; }
 .stacked-page .machine-section { display: block; position: static; padding: 16px 0 24px; border: 0; }
@@ -7,7 +8,7 @@
 .stacked-page .machine-toolbar { position: relative; z-index: 1; }
 .stacked-page .assembly-legend { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px 20px; padding-top: 18px; }
 .stacked-page .assembly-legend button { min-height: 44px; }
-.stacked-page .parts-section { display: block; overflow: visible; border-left: 0; border-top: 1px solid var(--line); padding: 32px 0 0; scroll-margin-top: 110px; }
+.stacked-page .parts-section { display: block; overflow: visible; border-left: 0; border-top: 1px solid var(--line); padding: 32px 0 0; scroll-margin-top: 0; }
 .stacked-page .parts-list { overflow: visible; max-height: none; padding: 0; }
 .stacked-page .part-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin-bottom: 32px; }
 .stacked-page .part-group-heading { grid-column: 1 / -1; }

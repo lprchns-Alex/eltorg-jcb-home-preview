@@ -68,6 +68,12 @@ const normalize = value => value.toLocaleLowerCase('ru-RU').replace(/ё/g, 'е')
 const refreshIcons = () => window.lucide?.createIcons();
 let searchMode = 'article';
 let sortMode = 'default';
+const sortOptions = [
+  { value: 'default', label: 'По умолчанию' },
+  { value: 'price-asc', label: 'Сначала дешевле' },
+  { value: 'price-desc', label: 'Сначала дороже' },
+  { value: 'name', label: 'По названию' }
+];
 let returnFocus = null;
 let cleanupCategoryCards = () => {};
 let cleanupPopularCarousel = () => {};
@@ -98,7 +104,9 @@ function searchPanel(mode) {
 }
 
 function finderDropdown(name, label, values, selected = '') {
-  return `<div class="finder-dropdown"><input type="hidden" name="${name}" value="${escapeHtml(selected)}"><button type="button" class="finder-select-trigger" role="combobox" aria-label="${label}" aria-haspopup="listbox" aria-expanded="false" aria-controls="finder-options-${name}"><span class="finder-select-value${selected ? '' : ' is-placeholder'}">${selected || 'Выберите бренд спецтехники'}</span>${icon('chevron-down')}</button><div class="finder-options" id="finder-options-${name}" role="listbox" aria-label="${label}" hidden>${values.map((value, index) => `<button type="button" role="option" tabindex="-1" id="finder-option-${name}-${index}" aria-selected="${value === selected}" data-finder-option="${escapeHtml(value)}"><span>${escapeHtml(value)}</span>${icon('check')}</button>`).join('')}</div></div>`;
+  const options = values.map(option => typeof option === 'string' ? { value: option, label: option } : option);
+  const selectedLabel = options.find(option => option.value === selected)?.label;
+  return `<div class="finder-dropdown"><input type="hidden" name="${name}" value="${escapeHtml(selected)}"><button type="button" class="finder-select-trigger" role="combobox" aria-label="${escapeHtml(label)}" aria-haspopup="listbox" aria-expanded="false" aria-controls="finder-options-${name}"><span class="finder-select-value${selectedLabel ? '' : ' is-placeholder'}">${escapeHtml(selectedLabel || 'Выберите бренд спецтехники')}</span>${icon('chevron-down')}</button><div class="finder-options" id="finder-options-${name}" role="listbox" aria-label="${escapeHtml(label)}" hidden>${options.map((option, index) => `<button type="button" role="option" tabindex="-1" id="finder-option-${name}-${index}" aria-selected="${option.value === selected}" data-finder-option="${escapeHtml(option.value)}"><span>${escapeHtml(option.label)}</span>${icon('check')}</button>`).join('')}</div></div>`;
 }
 
 function setFinderDropdownOpen(dropdown, open) {
@@ -131,13 +139,21 @@ function highlightFinderOption(dropdown, option) {
 
 function selectFinderOption(dropdown, value) {
   const options = [...dropdown.querySelectorAll('[role="option"]')];
-  if (!options.some(option => option.dataset.finderOption === value)) return;
-  dropdown.querySelector('input').value = value;
+  const selectedOption = options.find(option => option.dataset.finderOption === value);
+  if (!selectedOption) return;
+  const input = dropdown.querySelector('input');
+  input.value = value;
   const label = dropdown.querySelector('.finder-select-value');
-  label.textContent = value;
+  label.textContent = selectedOption.querySelector('span').textContent;
   label.classList.remove('is-placeholder');
   options.forEach(option => option.setAttribute('aria-selected', String(option.dataset.finderOption === value)));
-  dropdown.closest('form').querySelector('[type="submit"]').disabled = false;
+  if (input.name === 'sort') {
+    sortMode = value;
+    document.querySelector('#catalog-items').innerHTML = resultMarkup(currentRoute().params);
+    refreshIcons();
+  } else {
+    dropdown.closest('form').querySelector('[type="submit"]').disabled = false;
+  }
   setFinderDropdownOpen(dropdown, false);
   dropdown.querySelector('.finder-select-trigger').focus({ preventScroll: true });
 }
@@ -183,7 +199,7 @@ document.addEventListener('keydown', event => {
   else if (event.key === 'ArrowDown') next = open ? Math.min(index + 1, options.length - 1) : index;
   else if (event.key === 'ArrowUp') next = open ? Math.max(index - 1, 0) : index;
   else {
-    const match = [...options.slice(index + 1), ...options.slice(0, index + 1)].find(option => option.dataset.finderOption.toLowerCase().startsWith(event.key.toLowerCase()));
+    const match = [...options.slice(index + 1), ...options.slice(0, index + 1)].find(option => option.textContent.trim().toLowerCase().startsWith(event.key.toLowerCase()));
     if (match) next = options.indexOf(match);
   }
   highlightFinderOption(dropdown, options[next]);
@@ -548,7 +564,7 @@ function catalog(params) {
     <div class="catalog-layout">
       <aside class="catalog-sidebar"><div class="filter-title">КАТЕГОРИИ</div><nav class="category-filter" aria-label="Категории каталога"><a href="${catalogHref(params, { category: '' })}" class="${!category ? 'active' : ''}">Все запчасти</a>${categories.map(item => `<a href="${catalogHref(params, { category: item.id })}" class="${category?.id === item.id ? 'active' : ''}" ${category?.id === item.id ? 'aria-current="page"' : ''}>${item.name}</a>`).join('')}</nav></aside>
       <div class="catalog-results">
-        <div class="catalog-toolbar"><span role="status" id="result-count">Найдено позиций: ${resultCount}</span><select id="sort" aria-label="Сортировка"><option value="default">По умолчанию</option><option value="price-asc" ${sortMode === 'price-asc' ? 'selected' : ''}>Сначала дешевле</option><option value="price-desc" ${sortMode === 'price-desc' ? 'selected' : ''}>Сначала дороже</option><option value="name" ${sortMode === 'name' ? 'selected' : ''}>По названию</option></select></div>
+        <div class="catalog-toolbar"><span role="status" id="result-count">Найдено позиций: ${resultCount}</span>${finderDropdown('sort', 'Сортировка', sortOptions, sortMode)}</div>
         <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Позиции с отметкой «Демо» добавлены для примера: фото, артикулы, цены и применимость условные. Актуальные данные подтвердит менеджер.</p>
       </div>
     </div>
@@ -808,14 +824,6 @@ document.addEventListener('submit', event => {
     });
     refreshIcons();
     result.querySelector('h2').focus();
-  }
-});
-
-document.addEventListener('change', event => {
-  if (event.target.id === 'sort') {
-    sortMode = event.target.value;
-    document.querySelector('#catalog-items').innerHTML = resultMarkup(currentRoute().params);
-    refreshIcons();
   }
 });
 

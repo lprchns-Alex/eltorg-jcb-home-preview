@@ -142,10 +142,10 @@ main:focus, section[tabindex]:focus { outline: none; }
 .finder-search .button:hover { background: var(--yellow-hover); }
 .finder-input { display: flex; align-items: center; flex: 1; min-width: 0; }
 .finder-dropdown { position: relative; flex: 1; min-width: 0; height: 100%; background: #fff; border-radius: 10px; }
-.finder-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; height: 100%; padding: 0 20px; border-radius: 10px; text-align: left; font-size: 16px; }
+.finder-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-width: 0; height: 100%; padding: 0 16px; border-radius: inherit; text-align: left; font-size: 16px; line-height: 22px; }
 .finder-select-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .finder-select-value.is-placeholder { color: var(--muted); }
-.finder-select-trigger > svg { width: 18px; height: 18px; color: var(--muted); transition: transform .22s ease; }
+.finder-select-trigger > svg { flex: 0 0 18px; width: 18px; height: 18px; color: var(--muted); transition: transform .22s ease; }
 .finder-select-trigger[aria-expanded=true] > svg { transform: rotate(180deg); }
 .finder-select-trigger:focus-visible { outline: 2px solid #a58c17; outline-offset: -4px; }
 .finder-options { position: absolute; z-index: 20; top: calc(100% + 10px); left: 0; right: 0; max-height: 328px; overflow-y: auto; overscroll-behavior: contain; padding: 6px; border: 1px solid #dde1e3; border-radius: 8px; background: #fff; box-shadow: 0 12px 32px #2027291f, 0 2px 6px #2027290a; animation: finder-dropdown-in .18s ease-out; }
@@ -154,7 +154,8 @@ main:focus, section[tabindex]:focus { outline: none; }
 .finder-options [role=option] { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 4px; text-align: left; font-size: 15px; line-height: 1.4; }
 .finder-options [role=option]:hover, .finder-options .is-highlighted { background: #f0f3f4; }
 .finder-options [aria-selected=true] { background: #fff6c7; font-weight: 650; }
-.finder-options [role=option] > svg { width: 17px; height: 17px; opacity: 0; }
+.finder-options [role=option] > span { min-width: 0; overflow-wrap: anywhere; }
+.finder-options [role=option] > svg { flex: 0 0 17px; width: 17px; height: 17px; opacity: 0; }
 .finder-options [aria-selected=true] > svg { opacity: 1; }
 .finder-submit:disabled { opacity: .45; cursor: default; }
 @keyframes finder-dropdown-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
@@ -462,7 +463,12 @@ main:focus, section[tabindex]:focus { outline: none; }
 .sidebar-help p { color: var(--muted); font-size: 14px; margin-block: 12px 18px; }
 .sidebar-help .button { font-size: 14px; gap: 14px; padding-inline: 16px; width: 100%; }
 .catalog-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-block: 22px; font-size: 14px; color: #87949c; }
-.catalog-toolbar select { border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; background: white; font-size: 14px; max-width: 210px; }
+.catalog-toolbar > .finder-dropdown { flex: 0 0 210px; width: 210px; max-width: 100%; height: 44px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); }
+.catalog-toolbar .finder-select-trigger { font-size: 14px; }
+.catalog-toolbar .finder-dropdown:hover { border-color: #a8b2b7; }
+.catalog-toolbar .finder-options { top: calc(100% + 6px); padding: 4px; }
+.catalog-toolbar .finder-dropdown.opens-up .finder-options { top: auto; bottom: calc(100% + 6px); }
+.catalog-toolbar .finder-options [role=option] { padding: 10px; font-size: 14px; }
 .catalog-brands { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
 .catalog-brands a { padding: 6px 0; border-bottom: 2px solid transparent; font-size: 14px; white-space: nowrap; }
 .catalog-brands a:hover, .catalog-brands a[aria-current] { border-bottom-color: var(--yellow); color: var(--ink); }
@@ -777,7 +783,7 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .category-filter a.active { border-color: #334651; }
   .catalog-results { margin-top: 13px; }
   .catalog-toolbar { font-size: 14px; gap: 12px; flex-wrap: wrap; }
-  .catalog-toolbar select { max-width: 100%; font-size: 14px; }
+  .catalog-toolbar > .finder-dropdown { flex-basis: 196px; width: 196px; }
   #catalog-items { gap: 28px 14px; }
   .catalog-results .part-visual img { padding: 16px; }
   .catalog-results .part-card h3 { font-size: 16px; min-height: 46px; }
