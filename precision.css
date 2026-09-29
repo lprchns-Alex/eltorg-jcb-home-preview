@@ -115,16 +115,17 @@ main:focus, section[tabindex]:focus { outline: none; }
 .hero-bottom a { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); font-size: 14px; border-bottom: 1px solid #90989b; padding-bottom: 4px; }
 .hero-bottom svg { height: 14px; width: 14px; }
 
-.finder { background: #fff; border-bottom: 1px solid var(--line); }
-.finder-inner { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; align-items: center; padding-block: 44px; }
+.finder { padding-block: 32px; background: #f1f3f2; border-bottom: 1px solid var(--line); }
+.finder-inner { display: block; padding: 30px 32px 32px; border: 1px solid #dfe3e4; border-top: 4px solid var(--yellow); border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #2027290a; }
+.finder-heading { margin-bottom: 22px; }
 .finder-heading h2 { font-size: 32px; line-height: 1.25; }
-.finder-tabs { display: flex; align-items: stretch; gap: 4px; padding: 7px; margin: 0; background: #f0f2f2; border: 0; border-radius: 8px; }
+.finder-tabs { display: flex; align-items: stretch; width: fit-content; max-width: 100%; gap: 4px; padding: 4px; margin: 0; background: #f0f2f2; border: 1px solid #e8ebec; border-radius: 8px; }
 .finder-tabs button { color: var(--muted); padding: 0 16px; font-size: 14px; line-height: 1.4; border-radius: 6px; white-space: nowrap; }
 .finder-tabs button:hover { background: #f5f6f6; color: var(--ink); }
 .finder-tabs button[aria-selected=true] { color: var(--ink); background: #fff; font-weight: 650; box-shadow: 0 1px 4px #22252712; }
-.finder-workspace { min-width: 0; grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: auto minmax(0,1fr); align-items: stretch; gap: 16px; }
+.finder-workspace { min-width: 0; display: grid; grid-template-columns: minmax(0,1fr); align-items: stretch; gap: 14px; }
 .finder-workspace #finder-panel { min-width: 0; }
-.finder-workspace .finder-tabs { align-self: start; min-height: 60px; }
+.finder-workspace .finder-tabs { align-self: start; min-height: 48px; }
 .finder-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; color: var(--muted); font-size: 13px; }
 .finder-examples > span { margin-right: 4px; font-weight: 600; }
 .finder-examples button { padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; background: #f5f6f7; color: var(--muted); line-height: 1.5; }
@@ -134,7 +135,7 @@ main:focus, section[tabindex]:focus { outline: none; }
 .search-large input, .search-large select { width: 100%; min-width: 0; border: 0; outline: none; background: transparent; height: 48px; font-size: 16px; }
 .search-large > svg { width: 19px; color: #858e93; }
 .search-large .button { min-height: 52px; padding: 14px 24px; gap: 30px; flex-shrink: 0; }
-.finder-workspace .finder-search { height: 60px; min-height: 60px; padding: 0; gap: 0; border: 2px solid var(--yellow); border-radius: 12px; background: var(--yellow); box-shadow: none; }
+.finder-workspace .finder-search { height: 64px; min-height: 64px; padding: 0; gap: 0; border: 2px solid var(--yellow); border-radius: 10px; background: var(--yellow); box-shadow: none; }
 .finder-workspace .finder-search:focus-within { box-shadow: 0 0 0 3px #ffb80033; }
 .finder-search .finder-input { height: 100%; padding-inline: 20px; background: #fff; border-radius: 10px; }
 .finder-workspace .finder-submit { display: flex; justify-content: center; width: 80px; min-height: 0; height: 56px; padding: 0; border-radius: 0 10px 10px 0; background: var(--yellow); color: var(--ink); }
@@ -578,9 +579,9 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .hero-inner { padding-top: 37px; }
   .hero-bottom a { font-size: 14px; }
   .hero-bottom > span { display: none; }
-  .finder-workspace { grid-template-columns: 1fr; }
-  .finder-workspace .finder-tabs { min-height: 52px; gap: 4px; margin: 0; border: 0; border-radius: 8px; }
-  .finder-workspace .finder-tabs button { flex: 1 1 0; padding-inline: 8px; }
+  .finder-workspace { grid-template-columns: minmax(0,1fr); }
+  .finder-workspace .finder-tabs { min-height: 48px; gap: 4px; margin: 0; border: 1px solid #e8ebec; border-radius: 8px; }
+  .finder-workspace .finder-tabs button { flex: 0 1 auto; padding-inline: 14px; }
   .finder-search .finder-input { padding-inline: 14px; }
   .finder-workspace .finder-submit { width: 60px; }
   .section-top h2 { font-size: 32px; }
@@ -814,7 +815,9 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .header-phone > span { display: none; }
   .header-search input { font-size: 16px; }
   .catalog-menu-footer { flex-wrap: wrap; gap: 8px; }
-  .finder-inner { grid-template-columns: 1fr; gap: 24px; padding-block: 36px; }
+  .finder { padding-block: 20px; }
+  .finder-inner { padding: 22px 18px 24px; }
+  .finder-heading { margin-bottom: 18px; }
   .finder-heading h2 { font-size: 28px; max-width: none; }
   .finder-help { grid-column: 1; grid-row: 3; max-width: none; border-top: 1px solid var(--line); padding-top: 20px; }
   .finder-help > svg:last-child { margin-left: auto; }
@@ -830,7 +833,7 @@ dialog::backdrop { background: #17252cb3; backdrop-filter: blur(5px); }
   .header-phone { display: flex; }
   .hero h1 { font-size: 36px; }
   .hero-copy { font-size: 14px; }
-  .finder-tabs { gap: 20px; }
+  .finder-tabs { width: 100%; }
   .search-large { gap: 8px; padding-left: 9px; }
   .search-large input { font-size: 16px; }
   .search-large .button { padding-inline: 12px; gap: 9px; }
