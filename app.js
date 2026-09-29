@@ -93,9 +93,19 @@ function productRow(product, compact = false) {
 }
 
 const equipmentBrandOptions = ['JCB', 'Case', 'Terex', 'Caterpillar (CAT)', 'Komatsu', 'Hidromek', 'New Holland', 'MST'];
+const equipmentBrandLogos = {
+  JCB: 'jcb.svg',
+  Case: 'case.svg',
+  Terex: 'terex.png',
+  'Caterpillar (CAT)': 'cat.svg',
+  Komatsu: 'komatsu.svg',
+  Hidromek: 'hidromek.svg',
+  'New Holland': 'new-holland.svg',
+  MST: 'mst.svg'
+};
 
 function finder() {
-  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Нужная деталь. Точный поиск.</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">По артикулу</button><button id="tab-brand" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="brand">По бренду</button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">По названию</button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">По модели</button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div></div></section>`;
+  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Нужная деталь. Точный поиск.</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">${icon('scan-barcode')}<span>По артикулу</span></button><button id="tab-brand" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="brand">${icon('badge-check')}<span>По бренду</span></button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">${icon('text-search')}<span>По названию</span></button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">${icon('tractor')}<span>По модели</span></button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div></div></section>`;
 }
 
 function searchPanel(mode) {
@@ -211,8 +221,8 @@ document.addEventListener('keydown', event => {
 });
 
 function searchForm(mode) {
-  if (mode === 'brand') return `<form class="search-large finder-search" data-brand-form>${finderDropdown('brand', 'Бренд спецтехники', equipmentBrandOptions)}<button class="button finder-submit" type="submit" aria-label="Подобрать по бренду" title="Подобрать по бренду" disabled>${icon('search')}</button></form>`;
-  const submit = `<button class="button finder-submit" type="submit" aria-label="${mode === 'model' ? 'Подобрать по модели' : 'Найти запчасть'}" title="${mode === 'model' ? 'Подобрать по модели' : 'Найти запчасть'}">${icon('search')}</button>`;
+  if (mode === 'brand') return `<form class="search-large finder-search" data-brand-form>${finderDropdown('brand', 'Бренд спецтехники', equipmentBrandOptions)}<button class="button finder-submit" type="submit" aria-label="Найти запчасть по бренду" title="Найти запчасть по бренду" disabled>${icon('search')}<span>Найти запчасть</span></button></form>`;
+  const submit = `<button class="button finder-submit" type="submit" aria-label="${mode === 'model' ? 'Найти запчасть по модели' : 'Найти запчасть'}" title="${mode === 'model' ? 'Найти запчасть по модели' : 'Найти запчасть'}">${icon('search')}<span>Найти запчасть</span></button>`;
   if (mode === 'model') return `<form class="search-large finder-search" data-model-form>${finderDropdown('model', 'Модель техники', ['JCB 3CX', 'JCB 4CX', 'JCB 5CX', 'Телескопический погрузчик JCB', 'Другая модель JCB'], 'JCB 3CX')}${submit}</form>`;
   return `<form class="search-large finder-search" data-search><label class="finder-input"><span class="sr-only">${mode === 'article' ? 'Артикул запчасти' : 'Название запчасти'}</span><input name="q" type="search" placeholder="${mode === 'article' ? 'Введите артикул запчасти' : 'Введите название детали'}" autocomplete="off" required></label>${submit}</form>`;
 }
@@ -227,9 +237,8 @@ function productPreview(product) {
 }
 
 function productCard(product, kind = 'catalog') {
-  const category = categories.find(item => item.id === product.category);
-  const badge = { popular: 'Выбор покупателей', new: 'Новинка', special: 'Особые условия' }[kind] || (product.demo ? 'Демо' : '');
-  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}${productPreview(product)}<span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><span class="part-category">${category.name}${product.brand ? ' / ' + product.brand : ''}</span><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-product="${product.id}" aria-label="Запросить: ${escapeHtml(product.name)}" title="Запросить деталь">${icon('plus')}</button></div></div></article>`;
+  const badge = { popular: 'Выбор покупателей', new: 'Новинка', special: 'Особые условия' }[kind] || '';
+  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}${productPreview(product)}<span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-product="${product.id}" aria-label="Запросить: ${escapeHtml(product.name)}" title="Запросить деталь">${icon('plus')}</button></div></div></article>`;
 }
 
 function productShowcases() {
@@ -353,15 +362,8 @@ function initPopularCarousel() {
 }
 
 function equipmentBrands() {
-  return `<div class="equipment-brands"><div class="container equipment-brands-inner"><span class="equipment-brands-label">БРЕНДЫ ТЕХНИКИ</span><div class="equipment-brand-window" id="equipment-brand-window" tabindex="0" role="region" aria-label="Бренды техники"><div class="equipment-brand-track">${equipmentBrandOptions.map(brand => `<a class="equipment-brand" href="${catalogHref(new URLSearchParams(), { equipmentBrand: brand })}" aria-label="Запчасти для ${brand}">${brand}</a>`).join('')}</div></div><div class="equipment-brand-controls"><button class="icon-button" data-equipment-direction="-1" aria-controls="equipment-brand-window" aria-label="Предыдущие бренды" title="Предыдущие бренды">${icon('arrow-left')}</button><button class="icon-button" data-equipment-direction="1" aria-controls="equipment-brand-window" aria-label="Следующие бренды" title="Следующие бренды">${icon('arrow-right')}</button></div></div></div>`;
+  return `<div class="equipment-brands"><div class="container equipment-brands-inner"><div class="equipment-brand-window" id="equipment-brand-window" tabindex="0" role="region" aria-label="Бренды техники"><div class="equipment-brand-track">${equipmentBrandOptions.map(brand => `<a class="equipment-brand" href="${catalogHref(new URLSearchParams(), { equipmentBrand: brand })}" aria-label="Запчасти для ${brand}" title="${brand}"><span class="equipment-brand-logo" aria-hidden="true" style="--brand-logo:url('assets/equipment-brands/${equipmentBrandLogos[brand]}')"></span></a>`).join('')}</div></div></div></div>`;
 }
-
-document.addEventListener('click', event => {
-  const button = event.target.closest('[data-equipment-direction]');
-  if (!button) return;
-  const strip = document.querySelector('#equipment-brand-window');
-  strip.scrollBy({ left: Number(button.dataset.equipmentDirection) * strip.clientWidth * 0.7, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
-});
 
 function brandStrip() {
   // Additional manufacturers are an editorial selection pending assortment approval.
@@ -570,7 +572,7 @@ function catalog(params) {
       <aside class="catalog-sidebar"><div class="filter-title">КАТЕГОРИИ</div><nav class="category-filter" aria-label="Категории каталога"><a href="${catalogHref(params, { category: '' })}" class="${!category ? 'active' : ''}">Все запчасти</a>${categories.map(item => `<a href="${catalogHref(params, { category: item.id })}" class="${category?.id === item.id ? 'active' : ''}" ${category?.id === item.id ? 'aria-current="page"' : ''}>${item.name}</a>`).join('')}</nav></aside>
       <div class="catalog-results">
         <div class="catalog-toolbar"><span role="status" id="result-count">Найдено позиций: ${resultCount}</span>${finderDropdown('sort', 'Сортировка', sortOptions, sortMode)}</div>
-        <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Позиции с отметкой «Демо» добавлены для примера: фото, артикулы, цены и применимость условные. Актуальные данные подтвердит менеджер.</p>
+        <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Часть позиций добавлена для примера: фото, артикулы, цены и применимость условные. Актуальные данные подтвердит менеджер.</p>
       </div>
     </div>
   </div>${assistance()}`;
