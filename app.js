@@ -15,7 +15,8 @@ const categories = [
 
 // Only the source-confirmed article is supplied. Other part numbers and fitment need a client export.
 const products = [
-  { id: 'valve', name: 'Распределитель передний Husco', article: '25/222579', category: 'hydraulics', price: 260000, brand: 'Husco', image: 'valve.jpg' },
+  // Model families listed at https://jcb-volvo.ru/jcb/ekskavator-pogruzchik-3cx-3cx-super-4cx/gidravlika/elementy-gidrosistemy/valve_25-222579. Serial-number fitment still needs checking.
+  { id: 'valve', name: 'Распределитель передний Husco', article: '25/222579', category: 'hydraulics', price: 260000, brand: 'Husco', image: 'valve.jpg', equipmentModels: ['JCB 3CX', 'JCB 4CX'] },
   { id: 'crankshaft', name: 'Вал коленчатый', article: '', category: 'engine', price: 65000, brand: '', image: 'crankshaft.jpg' },
   { id: 'starter', name: 'Стартер', article: '', category: 'electrics', price: 21000, brand: '', image: 'starter.jpg' },
   { id: 'alternator', name: 'Генератор', article: '', category: 'electrics', price: 16000, brand: '', image: 'alternator.jpg' },
@@ -59,6 +60,9 @@ products.push(...[
   ["glass-bond-kit","Набор для вклейки стекла","cabin",3800,"JCB",""],
   ["electric-motor","Электромотор","electrics",19600,"Terex",""],
   ["injection-pump-tool","Инструмент для снятия ТНВД","fuel",11200,"Komatsu",""],
+  ["loader-valve-three-spool","Распределитель передний, 3 секции","hydraulics",192000,"JCB","valve-studio.jpg"],
+  ["loader-valve-assembly","Распределитель погрузчика в сборе","hydraulics",214000,"JCB","valve-studio.jpg"],
+  ["bucket-control-valve","Распределитель управления ковшом","hydraulics",228000,"JCB","valve-studio.jpg"],
 ].map(([id, name, category, price, equipmentBrand, image], index) => ({
   id, name, category, price, image, brand: '', demo: true,
   article: 'DEMO-' + String(index + 1001),
@@ -66,6 +70,7 @@ products.push(...[
 })));
 const main = document.querySelector('#main');
 const dialog = document.querySelector('#request-dialog');
+const photoDialog = document.querySelector('#photo-dialog');
 const money = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
 const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const icon = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
@@ -82,6 +87,8 @@ const sortOptions = [
 let returnFocus = null;
 let cleanupCategoryCards = () => {};
 let cleanupPopularCarousel = () => {};
+let galleryIndex = 0;
+let galleryReturnFocus = null;
 
 function breadcrumbs(items) {
   return `<nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="#home">Главная</a>${items.map(item => `${icon('chevron-right')}${item.href ? `<a href="${item.href}">${escapeHtml(item.name)}</a>` : `<span aria-current="page">${escapeHtml(item.name)}</span>`}`).join('')}</nav>`;
@@ -230,7 +237,7 @@ function searchForm(mode) {
 function productPreview(product) {
   if (product.demo && !product.image) {
     const index = categories.findIndex(category => category.id === product.category);
-    return `<span class="part-sprite" role="img" aria-label="${escapeHtml(product.name)} — иллюстрация" style="--category-sheet:url('assets/categories${index >= 6 ? '-extra' : ''}.jpg');--art-x:${index % 3 * 50}%;--art-y:${Math.floor(index % 6 / 3) * 100}%"></span>`;
+    return `<span class="part-sprite" role="img" aria-label="${escapeHtml(product.name)} — иллюстрация">${categoryArtwork(index)}</span>`;
   }
   const studio = ['valve','crankshaft','starter','gear','alternator','tensioner'].includes(product.id);
   return `<img src="assets/${studio ? product.id + '-studio.jpg' : product.image}" alt="${escapeHtml(product.name)}" loading="lazy" width="500" height="500">`;
@@ -368,8 +375,7 @@ function equipmentBrands() {
 function brandStrip() {
   // Additional manufacturers are an editorial selection pending assortment approval.
   const brands = ['JCB', 'Perkins', 'Gates', 'TIMKEN', 'HUSCO', 'CARRARO', 'ZF', 'SKF', 'Donaldson', 'BOSCH'];
-  const group = copy => `<div class="brand-group" ${copy ? 'aria-hidden="true"' : ''}>${brands.map(brand => `<span class="brand-logo brand-logo--${brand.toLowerCase()}">${brand}</span>`).join('')}</div>`;
-  return `<section class="brands-band" aria-label="Бренды запчастей"><div class="container brands-heading"><span class="section-index">ИМЕНА, КОТОРЫЕ ЗНАЕТ ВАША ТЕХНИКА</span></div><div class="brand-window"><div class="brand-track">${group(false)}${group(true)}</div></div></section>`;
+  return `<section class="brands-band" aria-label="Бренды запчастей"><div class="container"><div class="equipment-brand-window" tabindex="0" role="region" aria-label="Производители запчастей"><div class="equipment-brand-track">${brands.map(brand => `<button class="equipment-brand parts-brand" data-request="Подбор запчастей ${brand}" aria-label="Подобрать запчасти ${brand}" title="${brand}"><span class="equipment-brand-logo" aria-hidden="true" style="--brand-logo:url('assets/${brand === 'JCB' ? 'equipment-brands' : 'parts-brands'}/${brand.toLowerCase()}.svg')"></span></button>`).join('')}</div></div></div></section>`;
 }
 
 function requestFields(subject = '', productId = '') {
@@ -394,18 +400,15 @@ function categoryGrid() {
   };
   const queryAliases = { 'Коленчатые валы': 'коленчатый', 'Стартеры': 'стартер', 'Генераторы': 'генератор', 'Главные пары': 'главная пара', 'Распределители': 'распределитель', 'Ковши': 'ковш', 'Переключатели': 'переключатель', 'Гидравлическое масло': 'гидравлическое масло', 'Ступицы': 'ступица', 'Набор для вклейки': 'набор для вклейки', 'Электромоторы': 'электромотор', 'Инструмент для снятия ТНВД': 'инструмент для снятия ТНВД' };
   const cards = categories.map((category, index) => {
-    const x = (index % 3) * 50;
-    const y = Math.floor((index % 6) / 3) * 100;
-    const explodedY = Math.floor(index / 3) * 100 / 3;
-    return `<article class="category-card" data-category="${category.id}" style="--slot:${index % 3};--art-x:${x}%;--art-y:${y}%;--exploded-y:${explodedY}%;--category-sheet:url('assets/categories${index > 5 ? '-extra' : ''}.jpg')">
+    return `<article class="category-card" data-category="${category.id}" style="--slot:${index % 3}">
       <div class="category-heading"><span class="category-number">${String(index + 1).padStart(2, '0')}<span> / 12</span></span><h3 id="category-title-${category.id}">${category.name}</h3><p>${category.sub}</p></div>
-      <span class="category-art" aria-hidden="true"></span>
+      <span class="category-art" aria-hidden="true">${categoryArtwork(index)}</span>
       <span class="category-open-icon" aria-hidden="true">${icon('arrow-up-right')}</span>
       <div class="category-rail" aria-hidden="true"><span class="category-rail-number">${String(index + 1).padStart(2, '0')}</span><span class="category-rail-title">${category.name}</span></div>
       <button class="category-trigger" type="button" aria-labelledby="category-title-${category.id}" aria-expanded="false" aria-controls="category-panel-${category.id}"></button>
       <div class="category-panel" id="category-panel-${category.id}" inert aria-hidden="true">
         <ul class="category-links">${groups[category.id].map(label => `<li><a href="#catalog?category=${category.id}&q=${encodeURIComponent(queryAliases[label] || label)}">${label}${icon('arrow-up-right')}</a></li>`).join('')}</ul>
-        <span class="category-exploded" role="img" aria-label="${category.name}: детали узла в разборе"></span>
+        <span class="category-exploded" role="img" aria-label="${category.name}: детали узла в разборе">${categoryArtwork(index, true)}</span>
         <a class="button dark category-catalog-link" href="#catalog?category=${category.id}">В каталог${icon('arrow-right')}</a>
         <button type="button" class="category-close" aria-label="Свернуть категорию ${category.name}" title="Свернуть">${icon('x')}</button>
       </div>
@@ -496,27 +499,36 @@ function company() {
 }
 
 function contactBand() {
-  return `<section class="contact-band" id="selection-request"><div class="container contact-band-inner"><div class="contact-copy"><span class="section-index">ПОДКЛЮЧИМСЯ К ВАШЕЙ ЗАДАЧЕ</span><h2>Начнём<br>с вашей детали.</h2><p>Номер, фотография или описание.<br>Остальное уточним вместе.</p><div class="contact-direct"><span class="contact-avatar">${icon('headset')}</span><div><small>Наталья · отдел запчастей</small><a href="tel:+79650894699">+7 (965) 089-46-99</a></div></div><a class="text-link" href="https://t.me/EltorgJCB" target="_blank" rel="noopener">Обсудить в Telegram${icon('arrow-up-right')}</a></div><div class="inline-request"><h3>Заявка на подбор</h3>${requestFields()}</div></div></section>`;
+  return `<section class="contact-band" id="selection-request"><div class="container contact-band-inner"><div class="contact-copy"><span class="section-index">ПОДКЛЮЧИМСЯ К ВАШЕЙ ЗАДАЧЕ</span><h2>Начнём с вашей детали.</h2><p>Номер, фотография или описание. Остальное уточним вместе.</p><div class="contact-direct"><span class="contact-avatar">${icon('headset')}</span><div><small>Наталья · отдел запчастей</small><a href="tel:+79650894699">+7 (965) 089-46-99</a></div></div><a class="text-link" href="https://t.me/EltorgJCB" target="_blank" rel="noopener">Обсудить в Telegram${icon('arrow-up-right')}</a></div><div class="inline-request"><h3>Заявка на подбор</h3>${requestFields()}</div></div></section>`;
 }
 
 function locationBand() {
   const benefits = [
-    ['scan-line', 'Подбор начинается с точности', 'Ищем по артикулу, фотографии или образцу. Уточняем модель и серийный номер техники.'],
-    ['component', 'От детали до целого узла', 'Двигатель, гидравлика, трансмиссия и другие системы JCB — в одном каталоге.'],
-    ['badge-check', 'Проверяем совместимость', 'Согласуем исполнение и комплектацию до заказа, чтобы деталь подошла вашей машине.'],
-    ['messages-square', 'На связи живые люди', 'Обсуждаем задачу напрямую. Помогаем разобраться в вариантах и условиях получения.'],
+    ['scan-line', 'Подбираем точно', 'По артикулу, фотографии или образцу. Уточним модель и серийный номер.'],
+    ['component', 'От детали до узла', 'Двигатель, гидравлика, трансмиссия и другие системы JCB.'],
+    ['badge-check', 'Проверяем совместимость', 'Согласуем исполнение и комплектацию до оформления заказа.'],
+    ['messages-square', 'На связи лично', 'Менеджер поможет с выбором, наличием и условиями получения.'],
   ];
-  return `<section class="location-band" id="petersburg" aria-labelledby="location-title"><div class="container">
-    <header class="location-heading"><span class="section-index">ЭЛЬТОРГ · БЛИЖЕ К ВАШЕЙ ТЕХНИКЕ</span><h2 id="location-title">Петербург — наш город.<br><span>Запчасти — наше дело.</span></h2><p>Помогаем найти нужную деталь для JCB и разобраться в её исполнении.<br> От первого вопроса до получения заказа — на связи с вами.</p></header>
-    <div class="location-layout">
-      <div class="location-benefits">${benefits.map(([symbol,title,text])=>`<article class="location-benefit"><span class="location-benefit-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join('')}<a class="text-link" href="#about">Больше об Эльторг${icon('arrow-up-right')}</a></div>
-      <div class="location-city">
-        <div class="location-city-art"><img src="assets/petersburg-relief.png" alt="Объёмная художественная иллюстрация Санкт-Петербурга: Нева, острова и миниатюрный экскаватор" width="1254" height="1254" loading="lazy"><a class="location-city-pin" href="#contacts" aria-label="Контакты магазина Эльторг"><span>${icon('map-pin')}</span><strong>ЭЛЬТОРГ</strong></a><span class="location-city-label">Санкт-Петербург</span></div>
-        <aside class="location-shop" aria-label="Магазин в Санкт-Петербурге"><span class="location-shop-kicker">${icon('map-pin')}МАГАЗИН ЭЛЬТОРГ</span><h3>Домостроительная, 16</h3><a class="location-shop-phone" href="tel:+79650894699">+7 (965) 089-46-99</a><p>Перед поездкой уточните часы работы и наличие нужной детали.</p><a class="text-link" href="https://yandex.ru/maps/?text=Санкт-Петербург%20Домостроительная%2016" target="_blank" rel="noopener">Построить маршрут${icon('arrow-up-right')}</a></aside>
+  const mapUrl = 'https://yandex.ru/maps/?rtext=~60.072751%2C30.373307&rtt=auto';
+  const mapTiles = Array.from({ length: 36 }, (_, i) => `<img src="assets/location-map/12-${2389 + i % 9}-${1185 + Math.floor(i / 9)}.png" width="256" height="256" alt="" loading="lazy">`).join('');
+  return `<section class="location-band" id="petersburg" aria-labelledby="location-title">
+    <div class="location-map-scene">
+      <div class="location-map-background" aria-hidden="true"><div class="location-map-tiles">${mapTiles}</div></div>
+      <header class="container location-heading"><a class="section-index location-more" href="#about">ЭЛЬТОРГ · БЛИЖЕ К ВАШЕЙ ТЕХНИКЕ${icon('arrow-up-right')}</a><h2 id="location-title">Петербург — наш город.<br><span>Запчасти — наше дело.</span></h2><p>Помогаем с подбором и остаёмся на связи<br> от первого вопроса до получения заказа.</p></header>
+      <div class="location-pin-group">
+        <aside class="location-shop" aria-label="Магазин в Санкт-Петербурге">
+          <div class="location-shop-brand"><span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><strong>ЭЛЬТОРГ</strong><span class="location-shop-label">Магазин запчастей</span></div>
+          <div class="location-shop-address"><span class="location-shop-kicker">Санкт-Петербург</span><h3>Домостроительная, 16</h3></div>
+          <a class="location-shop-phone" href="tel:+79650894699">${icon('phone')}+7 (965) 089-46-99</a>
+          <p>Перед поездкой уточните часы работы<br> и наличие нужной детали.</p>
+          <a class="button yellow location-route" href="${mapUrl}" target="_blank" rel="noopener">Построить маршрут${icon('arrow-up-right')}</a>
+        </aside>
+        <a class="location-map-marker" href="${mapUrl}" target="_blank" rel="noopener" aria-label="Магазин Эльторг на карте" title="Магазин Эльторг на карте">${icon('map-pin')}</a>
       </div>
+      <small class="location-map-attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></small>
     </div>
-    <div class="location-steps"><div><span>01</span><p>Расскажите о задаче<strong>Артикул, фото или модель техники</strong></p></div><div><span>02</span><p>Согласуем деталь<strong>Исполнение, цену и наличие</strong></p></div><div><span>03</span><p>Обсудим получение<strong>Самовывоз или условия отправки</strong></p></div><div><span>04</span><p>Доставим<strong>В согласованный срок и удобным способом</strong></p></div></div>
-  </div></section>`;
+    <div class="container location-benefits">${benefits.map(([symbol,title,text])=>`<article class="location-benefit"><span class="location-benefit-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join('')}</div>
+  </section>`;
 }
 
 function home() {
@@ -569,7 +581,7 @@ function catalog(params) {
     <div class="inner-heading"><h1>${heading}</h1><p>${query ? `По запросу «${escapeHtml(query)}»` : 'Выберите деталь. Точное исполнение и совместимость проверим по серийному номеру техники.'}</p></div>
     <nav class="catalog-brands" aria-label="Бренды техники">${brandOptions.map(brand => `<a href="${catalogHref(params, { equipmentBrand: brand })}" ${brand === equipmentBrand ? 'aria-current="true"' : ''}>${brand || 'Все бренды'}</a>`).join('')}</nav>
     <div class="catalog-layout">
-      <aside class="catalog-sidebar"><div class="filter-title">КАТЕГОРИИ</div><nav class="category-filter" aria-label="Категории каталога"><a href="${catalogHref(params, { category: '' })}" class="${!category ? 'active' : ''}">Все запчасти</a>${categories.map(item => `<a href="${catalogHref(params, { category: item.id })}" class="${category?.id === item.id ? 'active' : ''}" ${category?.id === item.id ? 'aria-current="page"' : ''}>${item.name}</a>`).join('')}</nav></aside>
+      <aside class="catalog-sidebar"><div class="filter-title">Категории</div><nav class="category-filter" aria-label="Категории каталога"><a href="${catalogHref(params, { category: '' })}" class="${!category ? 'active' : ''}">Все запчасти</a>${categories.map(item => `<a href="${catalogHref(params, { category: item.id })}" class="${category?.id === item.id ? 'active' : ''}" ${category?.id === item.id ? 'aria-current="page"' : ''}>${item.name}</a>`).join('')}</nav></aside>
       <div class="catalog-results">
         <div class="catalog-toolbar"><span role="status" id="result-count">Найдено позиций: ${resultCount}</span>${finderDropdown('sort', 'Сортировка', sortOptions, sortMode)}</div>
         <div id="catalog-items">${resultMarkup(params)}</div><p class="price-note">Часть позиций добавлена для примера: фото, артикулы, цены и применимость условные. Актуальные данные подтвердит менеджер.</p>
@@ -578,13 +590,156 @@ function catalog(params) {
   </div>${assistance()}`;
 }
 
+function productPhotos(product) {
+  if (!product.image) return [];
+  const original = { src: 'assets/' + product.image, label: product.demo ? 'Иллюстрация товара' : 'Фото из каталога' };
+  const studio = ['valve', 'crankshaft', 'starter', 'gear', 'alternator', 'tensioner'].includes(product.id);
+  return studio ? [{ src: `assets/${product.id}-studio.jpg`, label: 'Студийная ИИ-визуализация' }, original] : [original];
+}
+
+// Candidate groups share a part type, not confirmed fitment. Never infer analogs from category alone.
+const analogGroups = [
+  ['valve', 'control-valve', 'loader-valve-three-spool', 'loader-valve-assembly', 'bucket-control-valve'],
+  ['crankshaft', 'crankshaft-assembly'],
+  ['starter', 'starter-heavy'], ['alternator', 'alternator-24'],
+  ['tensioner', 'tensioner-assembly'], ['gear', 'gear-set'],
+  ['belt', 'belt-kit'], ['filter-kit', 'filter-service'],
+  ['track-roller', 'track-roller-heavy'], ['injector', 'injectors-service'],
+  ['wheel-set', 'wheel-industrial'], ['pin-kit', 'pin-service'],
+  ['bucket-teeth', 'bucket-crowns']
+];
+const companionCategories = {
+  engine: ['filters', 'seals', 'fuel'], hydraulics: ['seals', 'filters', 'pins'],
+  filters: ['engine', 'seals', 'fuel'], transmission: ['seals', 'wheels', 'pins'],
+  electrics: ['engine', 'filters'], equipment: ['pins', 'seals', 'hydraulics'],
+  undercarriage: ['pins', 'seals', 'wheels'], fuel: ['filters', 'seals', 'engine'],
+  wheels: ['transmission', 'seals'], pins: ['seals', 'equipment', 'filters'],
+  seals: ['filters', 'hydraulics', 'pins'], cabin: ['electrics', 'filters']
+};
+
+function productRecommendations(product) {
+  const analogIds = analogGroups.find(group => group.includes(product.id)) || [];
+  const analogs = products.filter(item => item.id !== product.id && analogIds.includes(item.id));
+  const curated = product.id === 'valve' ? ['seal-service', 'filter-kit', 'belt', 'pin-service'] : [];
+  const companions = curated.length ? curated.map(id => products.find(item => item.id === id)) : products.filter(item =>
+    item.id !== product.id && !analogIds.includes(item.id) && companionCategories[product.category].includes(item.category)
+  ).slice(0, 4);
+  return `<section class="detail-related" aria-labelledby="companions-title">
+    <div class="detail-section-heading"><h2 id="companions-title">С этим товаром покупают</h2><a class="text-link" href="#catalog">Весь каталог${icon('arrow-right')}</a></div>
+    <div class="detail-products">${companions.map(item => productCard(item)).join('')}</div>
+    <p class="detail-selection-note">Пример подборки. Комплектацию и применимость сопутствующих деталей подтвердит менеджер.</p>
+  </section><section class="detail-related" aria-labelledby="analogs-title">
+    <div class="detail-section-heading"><div><h2 id="analogs-title">Аналоги</h2><p>Пример подборки: фото, артикулы и цены условные. Взаимозаменяемость проверим по серийному номеру.</p></div><button class="text-link" data-request="${escapeHtml(`Подобрать аналог: ${product.name}${product.article ? ', артикул ' + product.article : ''}`)}">Подобрать аналог${icon('arrow-up-right')}</button></div>
+    ${analogs.length ? `<div class="detail-products">${analogs.map(item => productCard(item)).join('')}</div>` : '<p class="detail-selection-note detail-no-analogs">Подтверждённых аналогов пока нет. Уточним варианты замены для вашей техники.</p>'}
+  </section>`;
+}
+
 function productPage(params) {
   const product = products.find(item => item.id === params.get('id'));
   if (!product) return notFound();
   const category = categories.find(item => item.id === product.category);
-  const studio = ['valve','crankshaft','starter','gear','alternator','tensioner'].includes(product.id);
-  return `<div class="container">${breadcrumbs([{ name: 'Каталог', href: '#catalog' }, { name: category.name, href: '#catalog?category=' + category.id }, { name: product.name }])}<div class="product-detail"><div class="detail-gallery"><div class="detail-image">${product.demo ? productPreview(product) : `<img id="detail-photo" src="assets/${studio ? product.id + '-studio.jpg' : product.image}" alt="${escapeHtml(product.name)}${studio ? ' — визуализация' : ''}" width="600" height="600">`}</div>${studio ? `<div class="gallery-controls" role="group" aria-label="Изображения товара"><button data-gallery="studio" aria-pressed="true" aria-label="Студийная визуализация" title="Студийная визуализация"><img src="assets/${product.id}-studio.jpg" alt="" width="66" height="66"></button><button data-gallery="original" aria-pressed="false" aria-label="Исходное фото товара" title="Исходное фото товара"><img src="assets/${product.image}" alt="" width="66" height="66"></button></div>` : ''}<p class="gallery-caption" aria-live="polite">${product.demo ? 'Демонстрационная позиция: фото, артикул, цена и применимость условные.' : studio ? 'Студийная ИИ-визуализация. Точное исполнение смотрите на исходном фото.' : 'Фото из каталога Эльторг.'}</p></div><div class="detail-info"><span class="section-index">${category.name.toUpperCase()}</span><h1>${escapeHtml(product.name)}</h1><div class="stock">Наличие уточняется у менеджера</div><dl class="detail-specs"><div><dt>Артикул</dt><dd>${product.article || 'Уточним при подборе'}</dd></div>${product.brand ? `<div><dt>Производитель</dt><dd>${product.brand}</dd></div>` : ''}<div><dt>Применимость</dt><dd>Проверим по серийному номеру</dd></div><div><dt>Получение</dt><dd>Магазин в Санкт-Петербурге</dd></div></dl><div class="price">${money(product.price)}<small>Цена из каталога. Актуальную стоимость подтвердит менеджер.</small></div><button class="button yellow" data-product="${product.id}">Оставить заявку на деталь${icon('arrow-up-right')}</button><p class="detail-note">Уточним комплектацию, совместимость и условия получения. Для точного подбора подготовьте серийный номер техники.</p></div></div></div>${assistance()}`;
+  const photos = productPhotos(product);
+  const label = `${product.name}${product.article ? ', артикул ' + product.article : ''}`;
+  return `<div class="container product-page">
+    ${breadcrumbs([{ name: 'Каталог', href: '#catalog' }, { name: category.name, href: '#catalog?category=' + category.id }, { name: product.name }])}
+    <article class="product-detail" aria-labelledby="product-title">
+      <header class="detail-heading"><p class="detail-article">Артикул <strong>${product.article || 'уточняется'}</strong></p><h1 id="product-title">${escapeHtml(product.name)}</h1></header>
+      <div class="detail-gallery">
+        ${photos.length ? `<button class="detail-image" data-photo-open aria-label="Увеличить фото: ${escapeHtml(product.name)}"><img id="detail-photo" src="${photos[0].src}" alt="${escapeHtml(product.name)} — ${photos[0].label}" width="700" height="600"><span class="detail-zoom" aria-hidden="true">${icon('expand')}</span><span class="gallery-count" aria-hidden="true">1 / ${photos.length}</span></button>
+        <div class="gallery-controls" role="group" aria-label="Изображения товара">${photos.map((photo, index) => `<button type="button" data-gallery="${index}" aria-pressed="${index === 0}" aria-label="${photo.label}" title="${photo.label}"><img src="${photo.src}" alt="" width="80" height="72"></button>`).join('')}</div>
+        <p class="gallery-caption" aria-live="polite">${photos[0].label}${photos.length > 1 ? '. Исполнение сверяйте с фото из каталога.' : '.'}</p>` : `<div class="detail-image detail-illustration">${productPreview(product)}</div><p class="gallery-caption">Иллюстрация категории. Фото детали уточните у менеджера.</p>`}
+        ${product.demo ? '<p class="detail-demo-note">Демонстрационная позиция: фото, артикул, цена и применимость условные.</p>' : ''}
+      </div>
+      <div class="detail-info">
+        <div class="detail-purchase"><div class="detail-price-row"><div class="price">${money(product.price)}</div><span class="detail-availability">${icon('clock-3')}Наличие уточняется</span></div><p class="detail-price-note">Актуальную цену и срок поставки подтвердит менеджер.</p><button class="button yellow detail-order" data-product="${product.id}">Запросить наличие и цену${icon('arrow-up-right')}</button></div>
+        <section class="detail-characteristics" aria-labelledby="specs-title"><h2 id="specs-title">Характеристики</h2><dl class="detail-specs">
+          <div><dt>Категория</dt><dd>${category.name}</dd></div>
+          <div><dt>Производитель</dt><dd>${product.brand || 'Уточняется'}</dd></div>
+          <div><dt>Бренд техники</dt><dd>${product.equipmentBrands.map(escapeHtml).join(', ')}</dd></div>
+          <div><dt>Комплектация</dt><dd>Уточняется при заказе</dd></div>
+        </dl></section>
+        <section class="detail-fitment" aria-labelledby="fitment-title"><div class="detail-fitment-heading">${icon('tractor')}<h2 id="fitment-title">Совместимость с техникой</h2></div>
+          ${product.equipmentModels?.length ? `<ul class="detail-fitment-models" aria-label="Модели техники">${product.equipmentModels.map(model => `<li><strong>${escapeHtml(model)}</strong><span>Экскаватор-погрузчик</span></li>`).join('')}</ul>` : `<dl class="detail-fitment-list"><div><dt>Техника</dt><dd>${product.equipmentBrands.map(escapeHtml).join(', ')}</dd></div><div><dt>Модели</dt><dd>Требуют уточнения по серийному номеру</dd></div></dl>`}
+          <p>Точное исполнение и применимость проверим по серийному номеру до заказа.</p><button class="text-link" data-request="${escapeHtml('Проверить совместимость: ' + label + '. Модель техники и серийный номер: ')}">Проверить по серийному номеру${icon('arrow-up-right')}</button></section>
+        <div class="detail-fulfillment"><div>${icon('map-pin')}<p><strong>Самовывоз</strong><span>Санкт-Петербург,<br>Домостроительная, 16</span></p></div><div>${icon('truck')}<p><strong>Доставка</strong><span>Способ, стоимость и сроки согласуем при заказе</span></p></div></div>
+        <details class="detail-terms"><summary>Оплата, гарантия и возврат${icon('chevron-down')}</summary><p>Способ оплаты, документы, условия гарантии и возврата уточните у менеджера до оформления заказа. Оплата на сайте не требуется.</p></details>
+      </div>
+    </article>
+    ${productRecommendations(product)}
+  </div>`;
 }
+
+function selectProductPhoto(index) {
+  const product = products.find(item => item.id === currentRoute().params.get('id'));
+  if (!product) return;
+  const photos = productPhotos(product);
+  if (!photos[index]) return;
+  galleryIndex = index;
+  const photo = photos[index];
+  const image = document.querySelector('#detail-photo');
+  image.src = photo.src;
+  image.alt = `${product.name} — ${photo.label}`;
+  document.querySelectorAll('[data-gallery]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.gallery) === index)));
+  document.querySelector('.gallery-count').textContent = `${index + 1} / ${photos.length}`;
+  document.querySelector('.gallery-caption').textContent = photo.label + (photos.length > 1 && index === 0 ? '. Исполнение сверяйте с фото из каталога.' : '.');
+  if (photoDialog.open) {
+    setPhotoZoom(false);
+    const zoomImage = photoDialog.querySelector('img');
+    zoomImage.src = photo.src;
+    zoomImage.alt = image.alt;
+    photoDialog.querySelector('[data-photo-caption]').textContent = `${photo.label} · ${index + 1} / ${photos.length}`;
+    photoDialog.querySelectorAll('[data-photo-step]').forEach(button => { button.hidden = photos.length < 2; });
+  }
+}
+
+function setPhotoZoom(zoomed) {
+  const frame = photoDialog.querySelector('.photo-dialog-image');
+  const button = photoDialog.querySelector('[data-photo-zoom]');
+  frame.classList.toggle('is-zoomed', zoomed);
+  button.setAttribute('aria-pressed', String(zoomed));
+  button.setAttribute('aria-label', zoomed ? 'Уменьшить масштаб' : 'Увеличить масштаб');
+  button.title = button.getAttribute('aria-label');
+  frame.scrollLeft = zoomed ? (frame.scrollWidth - frame.clientWidth) / 2 : 0;
+  frame.scrollTop = zoomed ? (frame.scrollHeight - frame.clientHeight) / 2 : 0;
+}
+
+function openProductPhoto() {
+  const product = products.find(item => item.id === currentRoute().params.get('id'));
+  if (!product || !productPhotos(product).length) return;
+  galleryReturnFocus = document.activeElement;
+  photoDialog.querySelector('#photo-title').textContent = product.name;
+  photoDialog.showModal();
+  document.body.classList.add('modal-open');
+  selectProductPhoto(galleryIndex);
+  photoDialog.querySelector('[data-photo-close]').focus({ preventScroll: true });
+}
+
+function stepProductPhoto(step) {
+  const product = products.find(item => item.id === currentRoute().params.get('id'));
+  if (!product) return;
+  const count = productPhotos(product).length;
+  if (count) selectProductPhoto((galleryIndex + step + count) % count);
+}
+
+photoDialog.addEventListener('close', () => {
+  if (!dialog.open) document.body.classList.remove('modal-open');
+  if (galleryReturnFocus?.isConnected) galleryReturnFocus.focus({ preventScroll: true });
+});
+photoDialog.addEventListener('click', event => {
+  if (event.target.closest('[data-photo-close]')) photoDialog.close();
+  const zoom = event.target.closest('[data-photo-zoom]');
+  if (zoom) setPhotoZoom(zoom.getAttribute('aria-pressed') !== 'true');
+  const step = event.target.closest('[data-photo-step]');
+  if (step) stepProductPhoto(Number(step.dataset.photoStep));
+  if (event.target !== photoDialog) return;
+  const bounds = photoDialog.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) photoDialog.close();
+});
+photoDialog.addEventListener('keydown', event => {
+  if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  stepProductPhoto(event.key === 'ArrowRight' ? 1 : -1);
+});
 
 function contacts() {
   return `<section class="container content-page">${breadcrumbs([{ name: 'Контакты' }])}<div class="inner-heading"><span class="section-index">НА СВЯЗИ</span><h1>Давайте разберёмся в деталях.</h1><p>Приезжайте в магазин или свяжитесь с отделом запчастей.</p></div><div class="info-grid"><div><div class="contact-person"><a href="tel:+79650894699">+7 (965) 089-46-99</a><span>Наталья · запчасти и подбор</span></div><div class="contact-person"><a href="tel:+79650894128">+7 (965) 089-41-28</a><span>Антон · запчасти и подбор</span></div><div class="contact-socials"><a class="button dark" href="https://t.me/EltorgJCB" target="_blank" rel="noopener">Написать в Telegram${icon('send')}</a><a class="button outline" href="https://wa.me/79650894699" target="_blank" rel="noopener">WhatsApp${icon('message-circle')}</a></div></div><div class="address-panel">${icon('map-pin')}<span class="section-index">МАГАЗИН ЭЛЬТОРГ</span><h2>Санкт-Петербург,<br>Домостроительная, 16</h2><p>Перед поездкой уточните часы работы и наличие нужной детали по телефону.</p><a class="text-link" href="https://yandex.ru/maps/?text=Санкт-Петербург%20Домостроительная%2016" target="_blank" rel="noopener">Открыть на карте${icon('arrow-up-right')}</a></div></div></section>${contactBand()}`;
@@ -608,7 +763,8 @@ function renderRoute() {
   cleanupCategoryCards();
   cleanupPopularCarousel();
   const { page, params } = currentRoute();
-  main.innerHTML = page === 'catalog' ? catalog(params) : home();
+  galleryIndex = 0;
+  main.innerHTML = page === 'catalog' ? catalog(params) : page === 'product' ? productPage(params) : home();
   document.title = (page === 'home' ? 'Запчасти для спецтехники' : main.querySelector('h1')?.textContent || 'Запчасти для спецтехники') + ' — Эльторг';
   document.querySelector('.navigation').classList.remove('open');
   document.querySelector('.header-search input[name="q"]').value = page === 'catalog' ? params.get('q') || '' : '';
@@ -639,7 +795,7 @@ function closeRequest() { dialog.close(); }
 const catalogDisclosure = document.querySelector('.catalog-disclosure');
 const catalogToggle = catalogDisclosure.querySelector('.catalog-button');
 const catalogMenu = document.querySelector('#catalog-menu');
-catalogMenu.innerHTML = `<div class="catalog-menu-heading"><span>ЗАПЧАСТИ ПО УЗЛАМ</span><a class="text-link" href="#catalog">Весь каталог${icon('arrow-up-right')}</a></div><div class="catalog-menu-grid">${categories.map((category, index) => `<a href="#catalog?category=${category.id}" data-category="${category.id}"><span class="menu-preview" aria-hidden="true" style="--category-sheet:url('assets/categories${index >= 6 ? '-extra' : ''}.jpg');--art-x:${index % 3 * 50}%;--art-y:${Math.floor(index % 6 / 3) * 100}%"></span><span class="menu-copy"><strong>${category.name}</strong><small>${category.sub}</small></span>${icon('arrow-up-right')}</a>`).join('')}</div><div class="catalog-menu-footer"><span>Не нашли нужную деталь?</span><button class="text-link" data-request="Подбор запчасти">Поможем с подбором${icon('arrow-up-right')}</button></div>`;
+catalogMenu.innerHTML = `<div class="catalog-menu-heading"><span>ЗАПЧАСТИ ПО УЗЛАМ</span><a class="text-link" href="#catalog">Весь каталог${icon('arrow-up-right')}</a></div><div class="catalog-menu-grid">${categories.map((category, index) => `<a href="#catalog?category=${category.id}" data-category="${category.id}"><span class="menu-preview" aria-hidden="true">${categoryArtwork(index)}</span><span class="menu-copy"><strong>${category.name}</strong><small>${category.sub}</small></span>${icon('arrow-up-right')}</a>`).join('')}</div><div class="catalog-menu-footer"><span>Не нашли нужную деталь?</span><button class="text-link" data-request="Подбор запчасти">Поможем с подбором${icon('arrow-up-right')}</button></div>`;
 let catalogCloseTimer;
 let catalogPinned = false;
 
@@ -669,16 +825,10 @@ catalogDisclosure.addEventListener('focusout', event => {
 document.addEventListener('click', event => {
   const galleryButton = event.target.closest('[data-gallery]');
   if (galleryButton) {
-    const product = products.find(item => item.id === currentRoute().params.get('id'));
-    if (!product) return;
-    const studio = galleryButton.dataset.gallery === 'studio';
-    const photo = document.querySelector('#detail-photo');
-    photo.src = 'assets/' + (studio ? product.id + '-studio.jpg' : product.image);
-    photo.alt = product.name + (studio ? ' — визуализация' : '');
-    document.querySelectorAll('[data-gallery]').forEach(button => button.setAttribute('aria-pressed', String(button === galleryButton)));
-    document.querySelector('.gallery-caption').textContent = studio ? 'Студийная ИИ-визуализация. Точное исполнение смотрите на исходном фото.' : 'Исходное фото товара из каталога Эльторг.';
+    selectProductPhoto(Number(galleryButton.dataset.gallery));
     return;
   }
+  if (event.target.closest('[data-photo-open]')) return openProductPhoto();
   if (!event.target.closest('.catalog-disclosure') || event.target.closest('#catalog-menu a, #catalog-menu button')) setCatalogOpen(false);
   const scrollButton = event.target.closest('[data-scroll]');
   if (scrollButton) {
@@ -696,12 +846,7 @@ document.addEventListener('click', event => {
   const previewLink = event.target.closest('a[href^="#"]');
   if (previewLink && previewLink.getAttribute('href') !== '#home') {
     const destination = previewLink.getAttribute('href');
-    if (destination.startsWith('#product')) {
-      event.preventDefault();
-      openRequest('', new URLSearchParams(destination.split('?')[1]).get('id'));
-      return;
-    }
-    if (destination.startsWith('#catalog')) return;
+    if (destination.startsWith('#product') || destination.startsWith('#catalog')) return;
     if (currentRoute().page !== 'home') return;
     event.preventDefault();
     const href = previewLink.getAttribute('href');
@@ -849,9 +994,10 @@ window.addEventListener('scroll', updateHeaderState, { passive: true });
 updateHeaderState();
 window.addEventListener('hashchange', () => {
   if (dialog.open) closeRequest();
-  if (!['home', 'catalog'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
+  if (photoDialog.open) photoDialog.close();
+  if (!['home', 'catalog', 'product'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
   renderRoute();
   main.focus({ preventScroll: true });
 });
-if (!['home', 'catalog'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
+if (!['home', 'catalog', 'product'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
 renderRoute();
