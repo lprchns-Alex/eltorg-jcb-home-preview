@@ -96,7 +96,7 @@ function breadcrumbs(items) {
 
 function productRow(product, compact = false) {
   const meta = product.article ? `<code>${product.article}</code>` : '<span>Артикул уточним при подборе</span>';
-  return `<article class="product-row"><a class="product-image" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}"><img src="assets/${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" width="100" height="86"></a><div><a class="product-title" href="#product?id=${product.id}">${escapeHtml(product.name)}</a><div class="product-meta">${meta}${product.brand ? `<span>${product.brand}</span>` : ''}</div>${compact ? '<div class="stock">Наличие уточняется</div>' : ''}</div>${compact ? '' : '<div class="stock">Уточнить наличие</div>'}<div class="price">${money(product.price)}<small>цена из каталога</small></div><button class="row-request" data-product="${product.id}" aria-label="Заказать: ${escapeHtml(product.name)}">Заказать${icon('arrow-up-right')}</button></article>`;
+  return `<article class="product-row"><a class="product-image" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}"><img src="assets/${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" width="100" height="86"></a><div><a class="product-title" href="#product?id=${product.id}">${escapeHtml(product.name)}</a><div class="product-meta">${meta}${product.brand ? `<span>${product.brand}</span>` : ''}</div>${compact ? '<div class="stock">Наличие уточняется</div>' : ''}</div>${compact ? '' : '<div class="stock">Уточнить наличие</div>'}<div class="price">${money(product.price)}<small>цена из каталога</small></div><button class="row-request" data-cart-add="${product.id}" aria-label="В корзину: ${escapeHtml(product.name)}">В корзину${icon('shopping-cart')}</button></article>`;
 }
 
 const equipmentBrandOptions = ['JCB', 'Case', 'Terex', 'Caterpillar (CAT)', 'Komatsu', 'Hidromek', 'New Holland', 'MST'];
@@ -112,7 +112,7 @@ const equipmentBrandLogos = {
 };
 
 function finder() {
-  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Нужная деталь. Точный поиск.</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">${icon('scan-barcode')}<span>По артикулу</span></button><button id="tab-brand" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="brand">${icon('badge-check')}<span>По бренду</span></button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">${icon('text-search')}<span>По названию</span></button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">${icon('tractor')}<span>По модели</span></button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div></div></section>`;
+  return `<section class="finder" id="part-finder" aria-labelledby="finder-title" tabindex="-1"><div class="container finder-inner"><div class="finder-heading"><h2 id="finder-title">Точный подбор запчасти — любым удобным способом</h2></div><div class="finder-workspace"><div class="finder-tabs" role="tablist" aria-label="Способ подбора"><button id="tab-article" role="tab" aria-controls="finder-panel" aria-selected="true" data-mode="article">${icon('scan-barcode')}<span>По артикулу</span></button><button id="tab-name" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="name">${icon('text-search')}<span>По названию</span></button><button id="tab-model" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="model">${icon('tractor')}<span>По модели</span></button><button id="tab-brand" role="tab" aria-controls="finder-panel" aria-selected="false" tabindex="-1" data-mode="brand">${icon('badge-check')}<span>По бренду</span></button></div><div id="finder-panel" role="tabpanel" aria-labelledby="tab-article">${searchPanel('article')}</div></div><div class="finder-contact"><div><h3>Сверхбыстрый подбор без лишних действий!</h3><p>Свяжитесь с нами любым удобным способом — менеджер за 5 минут подберёт нужную деталь, предложит аналоги и подробно ответит на все вопросы.</p></div><button type="button" class="button dark" data-scroll="#selection-request">Связаться${icon('arrow-down')}</button></div></div></section>`;
 }
 
 function searchPanel(mode) {
@@ -245,7 +245,7 @@ function productPreview(product) {
 
 function productCard(product, kind = 'catalog') {
   const badge = { popular: 'Выбор покупателей', new: 'Новинка', special: 'Особые условия' }[kind] || '';
-  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}${productPreview(product)}<span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-product="${product.id}" aria-label="Запросить: ${escapeHtml(product.name)}" title="Запросить деталь">${icon('plus')}</button></div></div></article>`;
+  return `<article class="part-card part-card--${kind}"><a class="part-visual" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${badge ? `<span class="part-badge">${badge}</span>` : ''}${productPreview(product)}<span class="part-view">${icon('arrow-up-right')}</span></a><div class="part-body"><div class="part-article">${product.article ? `Артикул <code>${product.article}</code>` : 'Артикул уточняется'}</div><h3><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h3><div class="part-bottom"><div class="part-price">${kind === 'special' ? 'По запросу' : money(product.price)}<small>${kind === 'special' ? 'Условия у менеджера' : 'Наличие уточняется'}</small></div><button class="part-request" data-cart-add="${product.id}" aria-label="В корзину: ${escapeHtml(product.name)}" title="Добавить в корзину">${icon('plus')}</button></div></div></article>`;
 }
 
 function productShowcases() {
@@ -379,7 +379,7 @@ function brandStrip() {
 }
 
 function requestFields(subject = '', productId = '') {
-  return `<form class="request-form"><input type="hidden" name="productId" value="${escapeHtml(productId)}"><div class="request-fields-row"><label>Ваше имя<input name="name" placeholder="Как к вам обращаться" autocomplete="given-name" required maxlength="80"></label><label>Телефон<input name="phone" type="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel" required maxlength="24"></label></div><label>Что нужно вашей технике?<textarea name="message" placeholder="Артикул, название детали или модель техники" maxlength="1500" required>${escapeHtml(subject)}</textarea></label><div class="error-message" role="alert" hidden></div><button class="button yellow" type="submit">Подготовить заявку${icon('arrow-up-right')}</button><p class="form-note">Отправка через сайт пока недоступна. Связаться с нами можно по телефону или в Telegram.</p></form>`;
+  return `<form class="request-form"><input type="hidden" name="productId" value="${escapeHtml(productId)}"><div class="request-fields-row"><label>Ваше имя<input name="name" placeholder="Как к вам обращаться" autocomplete="given-name" required maxlength="80"></label><label>Телефон<input name="phone" type="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel" required maxlength="24"></label></div><label>Что нужно вашей технике?<textarea name="message" placeholder="Артикул, название детали или модель техники" maxlength="1500" required>${escapeHtml(subject)}</textarea></label><div class="error-message" role="alert" hidden></div><button class="button yellow" type="submit">Отправить заявку${icon('arrow-up-right')}</button><p class="form-note">Отправка через сайт пока недоступна. Связаться с нами можно по телефону или в Telegram.</p></form>`;
 }
 
 function categoryGrid() {
@@ -495,40 +495,31 @@ function assistance() {
 }
 
 function company() {
-  return `<section class="company-section"><div class="container company-inner"><div class="company-intro"><span class="section-index">ЭЛЬТОРГ · САНКТ-ПЕТЕРБУРГ</span><h2>За каждой деталью<br>стоит человек,<br>который разберётся.</h2><a class="text-link" href="#about">Ближе к Эльторг${icon('arrow-right')}</a></div><div class="company-copy"><p>Когда техника стоит, важна не просто запчасть. Важна уверенность, что она подойдёт.</p><p>Разбираемся в вашей задаче, проверяем совместимость и помогаем выбрать нужное исполнение. Для механика, владельца техники и отдела снабжения.</p><div class="company-facts"><div>${icon('scan-line')}<strong>Точный подбор</strong><small>По артикулу и серийному номеру</small></div><div>${icon('messages-square')}<strong>Личный контакт</strong><small>Менеджер на связи по вашей задаче</small></div></div></div></div><div class="machine-banner"><picture><source media="(max-width:700px)" srcset="assets/machine-jcb-mobile-v3.png"><img src="assets/machine-jcb-v3.png" alt="JCB 4CX: экскаватор-погрузчик с ковшом влево на бетонной площадке" loading="lazy" width="2163" height="727"></picture><div class="container machine-caption"><span>ДЕТАЛИ ДЛЯ БОЛЬШОЙ РАБОТЫ</span><strong>JCB 3CX / 4CX / 5CX</strong><button class="text-link" data-request="Подбор запчастей для JCB">Подбор для вашей техники${icon('arrow-up-right')}</button></div></div></section>`;
+  return `<section class="company-section"><div class="container company-inner"><div class="company-intro"><span class="section-index">ЭЛЬТОРГ · САНКТ-ПЕТЕРБУРГ</span><h2>За каждой деталью<br>стоит человек,<br>который разберётся.</h2><a class="text-link" href="#about">Подробнее о компании${icon('arrow-right')}</a></div><div class="company-copy"><p>Когда техника стоит, важна не просто запчасть. Важна уверенность, что она подойдёт.</p><p>Разбираемся в вашей задаче, проверяем совместимость и помогаем выбрать нужное исполнение. Для механика, владельца техники и отдела снабжения.</p><div class="company-facts"><div>${icon('scan-line')}<strong>Точный подбор</strong><small>По артикулу и серийному номеру</small></div><div>${icon('messages-square')}<strong>Личный контакт</strong><small>Менеджер на связи по вашей задаче</small></div></div></div></div><div class="machine-banner"><picture><source media="(max-width:700px)" srcset="assets/machine-jcb-mobile-v3.png"><img src="assets/machine-jcb-v3.png" alt="JCB 4CX: экскаватор-погрузчик с ковшом влево на бетонной площадке" loading="lazy" width="2163" height="727"></picture><div class="container machine-caption"><span>ДЕТАЛИ ДЛЯ БОЛЬШОЙ РАБОТЫ</span><strong>JCB 3CX / 4CX / 5CX</strong><button class="text-link" data-request="Подбор запчастей для JCB">Подбор для вашей техники${icon('arrow-up-right')}</button></div></div></section>`;
 }
 
 function contactBand() {
-  return `<section class="contact-band" id="selection-request"><div class="container contact-band-inner"><div class="contact-copy"><span class="section-index">ПОДКЛЮЧИМСЯ К ВАШЕЙ ЗАДАЧЕ</span><h2>Начнём с вашей детали.</h2><p>Номер, фотография или описание. Остальное уточним вместе.</p><div class="contact-direct"><span class="contact-avatar">${icon('headset')}</span><div><small>Наталья · отдел запчастей</small><a href="tel:+79650894699">+7 (965) 089-46-99</a></div></div><a class="text-link" href="https://t.me/EltorgJCB" target="_blank" rel="noopener">Обсудить в Telegram${icon('arrow-up-right')}</a></div><div class="inline-request"><h3>Заявка на подбор</h3>${requestFields()}</div></div></section>`;
+  return `<section class="contact-band" id="selection-request" tabindex="-1"><div class="container contact-band-inner"><div class="contact-copy"><span class="section-index">ПОДКЛЮЧИМСЯ К ВАШЕЙ ЗАДАЧЕ</span><h2>Подберём запчасть за 5 минут, подробно ответим на все вопросы</h2><p>Для быстрого и точного подбора запчасти вам достаточно обратиться к нам!</p><div class="contact-direct"><span class="contact-avatar">${icon('headset')}</span><div><small>Наталья · отдел запчастей</small><a href="tel:+79650894699">+7 (965) 089-46-99</a></div></div><a class="text-link" href="https://t.me/EltorgJCB" target="_blank" rel="noopener">Обсудить в Telegram${icon('arrow-up-right')}</a></div><div class="inline-request"><h3>Заявка на подбор</h3>${requestFields()}</div></div></section>`;
 }
 
 function locationBand() {
   const benefits = [
-    ['scan-line', 'Подбираем точно', 'По артикулу, фотографии или образцу. Уточним модель и серийный номер.'],
-    ['component', 'От детали до узла', 'Двигатель, гидравлика, трансмиссия и другие системы JCB.'],
-    ['badge-check', 'Проверяем совместимость', 'Согласуем исполнение и комплектацию до оформления заказа.'],
-    ['messages-square', 'На связи лично', 'Менеджер поможет с выбором, наличием и условиями получения.'],
+    ['scan-line', 'Подбор начинается с точности', 'Ищем по артикулу, фотографии или образцу. Уточняем модель и серийный номер техники.'],
+    ['component', 'От детали до целого узла', 'Двигатель, гидравлика, трансмиссия и другие системы JCB — в одном каталоге.'],
+    ['badge-check', 'Проверяем совместимость', 'Согласуем исполнение и комплектацию до заказа, чтобы деталь подошла вашей машине.'],
+    ['messages-square', 'На связи живые люди', 'Обсуждаем задачу напрямую. Помогаем разобраться в вариантах и условиях получения.'],
   ];
-  const mapUrl = 'https://yandex.ru/maps/?rtext=~60.072751%2C30.373307&rtt=auto';
-  const mapTiles = Array.from({ length: 36 }, (_, i) => `<img src="assets/location-map/12-${2389 + i % 9}-${1185 + Math.floor(i / 9)}.png" width="256" height="256" alt="" loading="lazy">`).join('');
-  return `<section class="location-band" id="petersburg" aria-labelledby="location-title">
-    <div class="location-map-scene">
-      <div class="location-map-background" aria-hidden="true"><div class="location-map-tiles">${mapTiles}</div></div>
-      <header class="container location-heading"><a class="section-index location-more" href="#about">ЭЛЬТОРГ · БЛИЖЕ К ВАШЕЙ ТЕХНИКЕ${icon('arrow-up-right')}</a><h2 id="location-title">Петербург — наш город.<br><span>Запчасти — наше дело.</span></h2><p>Помогаем с подбором и остаёмся на связи<br> от первого вопроса до получения заказа.</p></header>
-      <div class="location-pin-group">
-        <aside class="location-shop" aria-label="Магазин в Санкт-Петербурге">
-          <div class="location-shop-brand"><span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><strong>ЭЛЬТОРГ</strong><span class="location-shop-label">Магазин запчастей</span></div>
-          <div class="location-shop-address"><span class="location-shop-kicker">Санкт-Петербург</span><h3>Домостроительная, 16</h3></div>
-          <a class="location-shop-phone" href="tel:+79650894699">${icon('phone')}+7 (965) 089-46-99</a>
-          <p>Перед поездкой уточните часы работы<br> и наличие нужной детали.</p>
-          <a class="button yellow location-route" href="${mapUrl}" target="_blank" rel="noopener">Построить маршрут${icon('arrow-up-right')}</a>
-        </aside>
-        <a class="location-map-marker" href="${mapUrl}" target="_blank" rel="noopener" aria-label="Магазин Эльторг на карте" title="Магазин Эльторг на карте">${icon('map-pin')}</a>
+  return `<section class="location-band" id="petersburg" aria-labelledby="location-title"><div class="container">
+    <header class="location-heading"><span class="section-index">ЭЛЬТОРГ · БЛИЖЕ К ВАШЕЙ ТЕХНИКЕ</span><h2 id="location-title">Петербург — наш город.<br><span>Запчасти — наше дело.</span></h2><p>Помогаем найти нужную деталь для JCB и разобраться в её исполнении.<br> От первого вопроса до получения заказа — на связи с вами.</p></header>
+    <div class="location-layout">
+      <div class="location-benefits">${benefits.map(([symbol,title,text])=>`<article class="location-benefit"><span class="location-benefit-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join('')}<a class="text-link" href="#about">Больше об Эльторг${icon('arrow-up-right')}</a></div>
+      <div class="location-city">
+        <div class="location-city-art"><img src="assets/petersburg-relief.png" alt="Объёмная художественная иллюстрация Санкт-Петербурга: Нева, острова и миниатюрный экскаватор" width="1254" height="1254" loading="lazy"><a class="location-city-pin" href="#contacts" aria-label="Контакты магазина Эльторг"><span>${icon('map-pin')}</span><strong>ЭЛЬТОРГ</strong></a><span class="location-city-label">Санкт-Петербург</span></div>
+        <aside class="location-shop" aria-label="Магазин в Санкт-Петербурге"><span class="location-shop-kicker">${icon('map-pin')}МАГАЗИН ЭЛЬТОРГ</span><h3>Домостроительная, 16</h3><a class="location-shop-phone" href="tel:+79650894699">+7 (965) 089-46-99</a><p>Перед поездкой уточните часы работы и наличие нужной детали.</p><a class="text-link" href="https://yandex.ru/maps/?rtext=~60.072751%2C30.373307&rtt=auto" target="_blank" rel="noopener">Построить маршрут${icon('arrow-up-right')}</a></aside>
       </div>
-      <small class="location-map-attribution">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></small>
     </div>
-    <div class="container location-benefits">${benefits.map(([symbol,title,text])=>`<article class="location-benefit"><span class="location-benefit-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join('')}</div>
-  </section>`;
+    <div class="location-steps"><div><span>01</span><p>Расскажите о задаче<strong>Артикул, фото или модель техники</strong></p></div><div><span>02</span><p>Согласуем деталь<strong>Исполнение, цену и наличие</strong></p></div><div><span>03</span><p>Обсудим получение<strong>Самовывоз или условия отправки</strong></p></div><div><span>04</span><p>Доставим<strong>В согласованный срок и удобным способом</strong></p></div></div>
+  </div></section>`;
 }
 
 function home() {
@@ -590,11 +581,16 @@ function catalog(params) {
   </div>${assistance()}`;
 }
 
+const equipmentModelImages = {
+  'JCB 3CX': 'assets/fitment-jcb-3cx-cutout.png',
+  'JCB 4CX': 'assets/fitment-jcb-4cx-cutout.png'
+};
+
 function productPhotos(product) {
   if (!product.image) return [];
   const original = { src: 'assets/' + product.image, label: product.demo ? 'Иллюстрация товара' : 'Фото из каталога' };
   const studio = ['valve', 'crankshaft', 'starter', 'gear', 'alternator', 'tensioner'].includes(product.id);
-  return studio ? [{ src: `assets/${product.id}-studio.jpg`, label: 'Студийная ИИ-визуализация' }, original] : [original];
+  return studio ? [{ src: `assets/${product.id}-studio.jpg`, label: 'Основное изображение' }, original] : [original];
 }
 
 // Candidate groups share a part type, not confirmed fitment. Never infer analogs from category alone.
@@ -634,6 +630,198 @@ function productRecommendations(product) {
   </section>`;
 }
 
+function deliveryMethods() {
+  return `<section class="detail-delivery"><h2>Способы доставки</h2><div class="detail-fulfillment"><div>${icon('map-pin')}<p><strong>Самовывоз</strong><span>Доступен в Москве и Санкт-Петербурге.</span></p></div><div>${icon('truck')}<p><strong>Транспортной компанией</strong><span>Бесплатно доставим вашу запчасть до терминала любой транспортной компании. Стоимость дальнейшей доставки зависит от условий выбранной вами ТК.</span></p></div></div></section>
+    <section class="detail-delivery"><h2>Способы оплаты</h2><div class="detail-fulfillment"><div>${icon('file-text')}<p><strong>Безналичный расчёт</strong><span>По счёту для юридических лиц и ИП.</span></p></div><div>${icon('credit-card')}<p><strong>Картой или наличными</strong><span>Банковской картой или наличными денежными средствами.</span></p></div></div></section>`;
+}
+
+function cartEntries() {
+  return window.eltorgCart.getItems().map(item => ({ ...item, product: products.find(product => product.id === item.id) })).filter(item => item.product);
+}
+
+const orderDemo = document.querySelector('meta[name="order-mode"]')?.content === 'demo';
+let checkoutDraft = { type: 'individual' };
+let orderReceipt = null;
+let orderPending = false;
+let orderAttempt = null;
+
+function checkoutSummary(entries) {
+  return `<h2>Ваш заказ</h2><ul class="checkout-products">${entries.map(({ product, quantity }) => `<li><div class="checkout-photo">${productPreview(product)}</div><div><strong>${escapeHtml(product.name)}</strong><small>${quantity} шт. × ${money(product.price)}</small></div><b>${money(product.price * quantity)}</b></li>`).join('')}</ul><p class="cart-total"><span>Итого</span><strong>${money(entries.reduce((sum, item) => sum + item.product.price * item.quantity, 0))}</strong></p><small>Без стоимости доставки. Цены и наличие подтвердит менеджер.</small>`;
+}
+
+function checkoutPage() {
+  if (orderReceipt) return orderConfirmation();
+  const entries = cartEntries();
+  return `<section class="container checkout-page">${breadcrumbs([{ name: 'Корзина', href: '#cart' }, { name: 'Оформление заказа' }])}<div class="cart-heading"><h1>Оформление заказа</h1></div>${entries.length ? `
+    <div class="checkout-layout"><div class="checkout-contact"><h2>Контактные данные</h2><p class="checkout-intro">Менеджер свяжется с вами, подтвердит наличие и согласует оплату и доставку.</p>
+    <form class="checkout-form" novalidate><fieldset class="checkout-fields" ${orderPending ? 'disabled' : ''}><legend class="sr-only">Данные покупателя</legend>
+      <fieldset class="customer-type"><legend>Покупатель</legend><label><input type="radio" name="type" value="individual" checked><span>Частное лицо</span></label><label><input type="radio" name="type" value="business"><span>Организация / ИП</span></label></fieldset>
+      <label class="checkout-field"><span id="order-label-name" data-customer-name-label>ФИО</span><input name="name" autocomplete="name" maxlength="160" required aria-labelledby="order-label-name" aria-describedby="order-error-name"><small class="field-error" id="order-error-name" hidden></small></label>
+      <div class="checkout-fields-row"><label class="checkout-field"><span id="order-label-phone">Телефон</span><input name="phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" maxlength="24" required aria-labelledby="order-label-phone" aria-describedby="order-error-phone"><small class="field-error" id="order-error-phone" hidden></small></label><label class="checkout-field"><span id="order-label-email">Электронная почта</span><input name="email" type="email" autocomplete="email" placeholder="name@company.ru" maxlength="254" required aria-labelledby="order-label-email" aria-describedby="order-error-email"><small class="field-error" id="order-error-email" hidden></small></label></div>
+      <label class="checkout-field" data-inn-field hidden><span id="order-label-inn">ИНН</span><input name="inn" inputmode="numeric" maxlength="12" pattern="[0-9]{10}|[0-9]{12}" disabled aria-labelledby="order-label-inn" aria-describedby="order-error-inn"><small class="field-error" id="order-error-inn" hidden></small></label>
+      <label class="checkout-field"><span id="order-label-comment">Комментарий к заказу</span><span class="optional-label">Необязательно</span><textarea name="comment" rows="3" maxlength="1500" placeholder="Модель техники, серийный номер или пожелания" aria-labelledby="order-label-comment" aria-describedby="order-error-comment"></textarea><small class="field-error" id="order-error-comment" hidden></small></label>
+    </fieldset><div class="error-message" role="alert" data-order-error hidden></div>
+    ${orderDemo ? '<p class="checkout-test-note">Тестовое оформление: заявка не будет отправлена менеджеру.</p>' : ''}
+    <button class="button yellow" type="submit" ${orderPending ? 'disabled' : ''}>${orderPending ? 'Отправляем заказ…' : 'Оформить заказ'}${icon('arrow-right')}</button><p class="form-note">Оплачивать на сайте ничего не нужно. Контакты нужны менеджеру для согласования заказа.</p></form></div>
+    <aside class="cart-summary checkout-summary"><div data-checkout-summary>${checkoutSummary(entries)}</div><a class="text-link" href="#cart">Изменить состав заказа${icon('arrow-left')}</a></aside></div>` : '<div class="empty-state"><h2>В корзине нет товаров</h2><p>Добавьте запчасти перед оформлением заказа.</p><a class="button yellow" href="#catalog">Перейти в каталог</a></div>'}</section>`;
+}
+
+function setCustomerType(form) {
+  const business = form.elements.type.value === 'business';
+  form.querySelector('[data-customer-name-label]').textContent = business ? 'Название организации / ФИО ИП' : 'ФИО';
+  form.elements.name.autocomplete = business ? 'organization' : 'name';
+  form.querySelector('[data-inn-field]').hidden = !business;
+  form.elements.inn.disabled = !business;
+  form.elements.inn.required = business;
+}
+
+function restoreCheckout() {
+  const form = main.querySelector('.checkout-form');
+  if (!form) return;
+  for (const [name, value] of Object.entries(checkoutDraft)) if (form.elements[name]) form.elements[name].value = value;
+  setCustomerType(form);
+}
+
+function orderConfirmation() {
+  const { orderId, demo, customer, entries, comment } = orderReceipt;
+  return `<section class="container checkout-page">${breadcrumbs([{ name: demo ? 'Тестовый заказ' : 'Заказ оформлен' }])}<div class="checkout-layout"><div class="order-confirmation"><span class="order-confirmation-icon">${icon('check')}</span><h1 tabindex="-1">${demo ? 'Тестовый заказ оформлен' : 'Заказ отправлен'}</h1><p class="order-number">№ ${escapeHtml(orderId)}</p><p>${demo ? 'Это проверка оформления. Заявка не отправлена менеджеру, звонка по этому заказу не будет.' : 'Менеджер свяжется с вами, подтвердит наличие и согласует способы оплаты и доставки.'}</p><dl class="order-contact-details"><div><dt>${customer.type === 'business' ? 'Организация / ИП' : 'Покупатель'}</dt><dd>${escapeHtml(customer.name)}</dd></div><div><dt>Телефон</dt><dd>${escapeHtml(customer.phone)}</dd></div><div><dt>Email</dt><dd>${escapeHtml(customer.email)}</dd></div>${customer.inn ? `<div><dt>ИНН</dt><dd>${escapeHtml(customer.inn)}</dd></div>` : ''}${comment ? `<div><dt>Комментарий</dt><dd>${escapeHtml(comment)}</dd></div>` : ''}</dl><a class="button yellow" href="#catalog">Продолжить покупки${icon('arrow-right')}</a></div><aside class="cart-summary checkout-summary">${checkoutSummary(entries)}</aside></div></section>`;
+}
+
+document.addEventListener('input', event => {
+  const form = event.target.closest('.checkout-form');
+  if (!form) return;
+  if (event.target.name === 'type') setCustomerType(form);
+  checkoutDraft = Object.fromEntries(new FormData(form));
+  event.target.removeAttribute('aria-invalid');
+  const error = form.querySelector(`#order-error-${event.target.name}`);
+  if (error) error.hidden = true;
+});
+
+document.addEventListener('submit', async event => {
+  const form = event.target;
+  if (!form.matches('.checkout-form')) return;
+  event.preventDefault();
+  if (orderPending) return;
+  const data = Object.fromEntries(new FormData(form));
+  const entries = cartEntries();
+  const { errors, value } = window.eltorgOrder.validate({ customer: data, comment: data.comment, items: entries.map(({ id, quantity }) => ({ id, quantity })) });
+  const notice = form.querySelector('[data-order-error]');
+  notice.hidden = true;
+  form.querySelectorAll('.field-error').forEach(error => { error.hidden = true; });
+  form.querySelectorAll('[aria-invalid]').forEach(field => field.removeAttribute('aria-invalid'));
+  if (Object.keys(errors).length) {
+    for (const [name, message] of Object.entries(errors)) {
+      const error = form.querySelector(`#order-error-${name}`);
+      if (error) { error.textContent = message; error.hidden = false; form.elements[name].setAttribute('aria-invalid', 'true'); }
+    }
+    notice.textContent = errors.items || 'Проверьте отмеченные поля.';
+    notice.hidden = false;
+    form.querySelector('[aria-invalid="true"]')?.focus();
+    return;
+  }
+  orderPending = true;
+  const button = form.querySelector('[type="submit"]');
+  form.querySelector('.checkout-fields').disabled = true;
+  button.disabled = true;
+  button.textContent = orderDemo ? 'Оформляем…' : 'Отправляем заказ…';
+  try {
+    const fingerprint = JSON.stringify(value);
+    if (orderAttempt?.fingerprint !== fingerprint) orderAttempt = { fingerprint, id: crypto.randomUUID() };
+    const result = orderDemo ? { orderId: 'TEST-' + orderAttempt.id.slice(0, 8).toUpperCase() }
+      : await window.eltorgOrder.send(document.querySelector('meta[name="order-endpoint"]')?.content, value, orderAttempt.id);
+    orderReceipt = { ...result, demo: orderDemo, customer: value.customer, comment: value.comment, entries };
+    checkoutDraft = { type: 'individual' };
+    window.eltorgCart.removeOrdered(value.items);
+    if (currentRoute().page === 'checkout') {
+      main.innerHTML = orderConfirmation();
+      refreshIcons();
+      main.querySelector('h1').focus();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  } catch (error) {
+    notice.textContent = error.name === 'TimeoutError' || error instanceof TypeError
+      ? 'Не удалось подтвердить отправку. Корзина сохранена. Проверьте соединение и повторите попытку.' : error.message;
+    notice.hidden = false;
+  } finally {
+    orderPending = false;
+    form.querySelector('.checkout-fields').disabled = false;
+    button.disabled = false;
+    button.innerHTML = `Оформить заказ${icon('arrow-right')}`;
+    if (!form.isConnected && !orderReceipt && currentRoute().page === 'checkout') { main.innerHTML = checkoutPage(); restoreCheckout(); }
+    refreshIcons();
+  }
+});
+
+function cartPage() {
+  const entries = cartEntries();
+  const total = entries.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  return `<section class="container cart-page">${breadcrumbs([{ name: 'Корзина' }])}<div class="cart-heading"><h1 tabindex="-1">Корзина</h1></div>
+    ${entries.length ? `<div class="cart-layout"><div class="cart-items">${entries.map(({ product, quantity }) => `<article class="cart-item">
+      <a class="cart-photo" href="#product?id=${product.id}" aria-label="${escapeHtml(product.name)}">${productPreview(product)}</a>
+      <div class="cart-copy"><p>Артикул ${escapeHtml(product.article || 'уточняется')}</p><h2><a href="#product?id=${product.id}">${escapeHtml(product.name)}</a></h2><small>${money(product.price)} за шт.</small></div>
+      <div class="cart-quantity"><button type="button" data-cart-step="-1" data-cart-id="${product.id}" aria-label="Уменьшить количество: ${escapeHtml(product.name)}" title="Уменьшить количество" ${quantity <= 1 ? 'disabled' : ''}>${icon('minus')}</button><input type="number" min="1" max="99" step="1" value="${quantity}" data-cart-quantity="${product.id}" aria-label="Количество: ${escapeHtml(product.name)}"><button type="button" data-cart-step="1" data-cart-id="${product.id}" aria-label="Увеличить количество: ${escapeHtml(product.name)}" title="Увеличить количество" ${quantity >= 99 ? 'disabled' : ''}>${icon('plus')}</button></div>
+      <strong class="cart-line-total">${money(product.price * quantity)}</strong><button class="icon-button cart-remove" data-cart-remove="${product.id}" aria-label="Удалить: ${escapeHtml(product.name)}" title="Удалить товар">${icon('trash-2')}</button>
+    </article>`).join('')}</div><aside class="cart-summary"><h2>Ваш заказ</h2><p><span>Товаров</span><strong>${entries.reduce((sum, item) => sum + item.quantity, 0)}</strong></p><p class="cart-total"><span>Итого</span><strong>${money(total)}</strong></p><small>Без стоимости доставки. Цены и наличие подтвердит менеджер.</small><a class="button yellow" href="#checkout" data-checkout-start>Оформить заказ${icon('arrow-right')}</a><small class="cart-retention">Корзина сохраняется на 10 дней после изменения в этом браузере.</small></aside></div><div class="cart-information">${deliveryMethods()}</div>` : `<div class="empty-state">${icon('shopping-cart')}<h2>Ваша корзина пока пуста</h2><p>Выберите нужные запчасти в каталоге.</p><a class="button yellow" href="#catalog">Перейти в каталог${icon('arrow-right')}</a></div>`}
+  </section>`;
+}
+
+function refreshCartPage() {
+  if (currentRoute().page === 'checkout' && !orderReceipt) {
+    const summary = main.querySelector('[data-checkout-summary]');
+    if (summary) { summary.innerHTML = checkoutSummary(cartEntries()); refreshIcons(); }
+    return;
+  }
+  if (currentRoute().page !== 'cart') return;
+  const active = document.activeElement;
+  const selector = active?.matches('[data-cart-quantity]') ? `[data-cart-quantity="${active.dataset.cartQuantity}"]`
+    : active?.matches('[data-cart-step]') ? `[data-cart-id="${active.dataset.cartId}"][data-cart-step="${active.dataset.cartStep}"]` : null;
+  const scroll = window.scrollY;
+  main.innerHTML = cartPage();
+  refreshIcons();
+  if (selector) {
+    const next = main.querySelector(selector);
+    (next?.disabled ? next.parentElement.querySelector('input') : next)?.focus({ preventScroll: true });
+  }
+  window.scrollTo({ top: scroll, behavior: 'instant' });
+}
+window.addEventListener('eltorg-cart-change', refreshCartPage);
+document.addEventListener('change', event => {
+  const input = event.target.closest('[data-cart-quantity]');
+  if (input) window.eltorgCart.setQuantity(input.dataset.cartQuantity, input.value);
+});
+let cartFeedbackTimer;
+document.addEventListener('click', event => {
+  const add = event.target.closest('[data-cart-add]');
+  if (add) {
+    const product = products.find(item => item.id === add.dataset.cartAdd);
+    if (!product) return;
+    const saved = window.eltorgCart.add(product.id);
+    let feedback = document.querySelector('.cart-feedback');
+    if (!feedback) {
+      feedback = document.createElement('div');
+      feedback.className = 'cart-feedback';
+      feedback.setAttribute('role', 'status');
+      document.body.append(feedback);
+    }
+    feedback.innerHTML = `<span>${escapeHtml(product.name)} добавлен в корзину.${saved ? '' : ' Сохранение между посещениями недоступно.'}</span><a href="#cart">В корзину${icon('arrow-right')}</a>`;
+    feedback.hidden = false;
+    refreshIcons();
+    clearTimeout(cartFeedbackTimer);
+    cartFeedbackTimer = setTimeout(() => { feedback.hidden = true; }, 5000);
+  }
+  const step = event.target.closest('[data-cart-step]');
+  if (step) {
+    const item = window.eltorgCart.getItems().find(item => item.id === step.dataset.cartId);
+    if (item) window.eltorgCart.setQuantity(item.id, item.quantity + Number(step.dataset.cartStep));
+  }
+  const remove = event.target.closest('[data-cart-remove]');
+  if (remove) {
+    window.eltorgCart.remove(remove.dataset.cartRemove);
+    main.querySelector('.cart-heading h1')?.focus({ preventScroll: true });
+  }
+  if (event.target.closest('[data-checkout-start]') && orderReceipt) { orderReceipt = null; orderAttempt = null; }
+});
+
 function productPage(params) {
   const product = products.find(item => item.id === params.get('id'));
   if (!product) return notFound();
@@ -646,12 +834,11 @@ function productPage(params) {
       <header class="detail-heading"><p class="detail-article">Артикул <strong>${product.article || 'уточняется'}</strong></p><h1 id="product-title">${escapeHtml(product.name)}</h1></header>
       <div class="detail-gallery">
         ${photos.length ? `<button class="detail-image" data-photo-open aria-label="Увеличить фото: ${escapeHtml(product.name)}"><img id="detail-photo" src="${photos[0].src}" alt="${escapeHtml(product.name)} — ${photos[0].label}" width="700" height="600"><span class="detail-zoom" aria-hidden="true">${icon('expand')}</span><span class="gallery-count" aria-hidden="true">1 / ${photos.length}</span></button>
-        <div class="gallery-controls" role="group" aria-label="Изображения товара">${photos.map((photo, index) => `<button type="button" data-gallery="${index}" aria-pressed="${index === 0}" aria-label="${photo.label}" title="${photo.label}"><img src="${photo.src}" alt="" width="80" height="72"></button>`).join('')}</div>
-        <p class="gallery-caption" aria-live="polite">${photos[0].label}${photos.length > 1 ? '. Исполнение сверяйте с фото из каталога.' : '.'}</p>` : `<div class="detail-image detail-illustration">${productPreview(product)}</div><p class="gallery-caption">Иллюстрация категории. Фото детали уточните у менеджера.</p>`}
+        <div class="gallery-controls" role="group" aria-label="Изображения товара">${photos.map((photo, index) => `<button type="button" data-gallery="${index}" aria-pressed="${index === 0}" aria-label="${photo.label}" title="${photo.label}"><img src="${photo.src}" alt="" width="80" height="72"></button>`).join('')}</div>` : `<div class="detail-image detail-illustration">${productPreview(product)}</div>`}
         ${product.demo ? '<p class="detail-demo-note">Демонстрационная позиция: фото, артикул, цена и применимость условные.</p>' : ''}
       </div>
       <div class="detail-info">
-        <div class="detail-purchase"><div class="detail-price-row"><div class="price">${money(product.price)}</div><span class="detail-availability">${icon('clock-3')}Наличие уточняется</span></div><p class="detail-price-note">Актуальную цену и срок поставки подтвердит менеджер.</p><button class="button yellow detail-order" data-product="${product.id}">Запросить наличие и цену${icon('arrow-up-right')}</button></div>
+        <div class="detail-purchase"><div class="detail-price-row"><div class="price">${money(product.price)}</div><span class="detail-availability">${icon('clock-3')}Наличие уточняется</span></div><p class="detail-price-note">Актуальную цену и срок поставки подтвердит менеджер.</p><button class="button yellow detail-order" data-cart-add="${product.id}">В корзину${icon('shopping-cart')}</button></div>
         <section class="detail-characteristics" aria-labelledby="specs-title"><h2 id="specs-title">Характеристики</h2><dl class="detail-specs">
           <div><dt>Категория</dt><dd>${category.name}</dd></div>
           <div><dt>Производитель</dt><dd>${product.brand || 'Уточняется'}</dd></div>
@@ -659,10 +846,10 @@ function productPage(params) {
           <div><dt>Комплектация</dt><dd>Уточняется при заказе</dd></div>
         </dl></section>
         <section class="detail-fitment" aria-labelledby="fitment-title"><div class="detail-fitment-heading">${icon('tractor')}<h2 id="fitment-title">Совместимость с техникой</h2></div>
-          ${product.equipmentModels?.length ? `<ul class="detail-fitment-models" aria-label="Модели техники">${product.equipmentModels.map(model => `<li><strong>${escapeHtml(model)}</strong><span>Экскаватор-погрузчик</span></li>`).join('')}</ul>` : `<dl class="detail-fitment-list"><div><dt>Техника</dt><dd>${product.equipmentBrands.map(escapeHtml).join(', ')}</dd></div><div><dt>Модели</dt><dd>Требуют уточнения по серийному номеру</dd></div></dl>`}
+          ${product.equipmentModels?.length ? `<ul class="detail-fitment-models" aria-label="Модели техники">${product.equipmentModels.map(model => `<li>${equipmentModelImages[model] ? `<div class="detail-fitment-photo"><img src="${equipmentModelImages[model]}" alt="Экскаватор-погрузчик ${escapeHtml(model)}" width="800" height="600" loading="lazy"></div>` : ''}<div class="detail-fitment-copy"><strong>${escapeHtml(model)}</strong><span>Экскаватор-погрузчик</span></div></li>`).join('')}</ul>` : `<dl class="detail-fitment-list"><div><dt>Техника</dt><dd>${product.equipmentBrands.map(escapeHtml).join(', ')}</dd></div><div><dt>Модели</dt><dd>Требуют уточнения по серийному номеру</dd></div></dl>`}
           <p>Точное исполнение и применимость проверим по серийному номеру до заказа.</p><button class="text-link" data-request="${escapeHtml('Проверить совместимость: ' + label + '. Модель техники и серийный номер: ')}">Проверить по серийному номеру${icon('arrow-up-right')}</button></section>
-        <div class="detail-fulfillment"><div>${icon('map-pin')}<p><strong>Самовывоз</strong><span>Санкт-Петербург,<br>Домостроительная, 16</span></p></div><div>${icon('truck')}<p><strong>Доставка</strong><span>Способ, стоимость и сроки согласуем при заказе</span></p></div></div>
-        <details class="detail-terms"><summary>Оплата, гарантия и возврат${icon('chevron-down')}</summary><p>Способ оплаты, документы, условия гарантии и возврата уточните у менеджера до оформления заказа. Оплата на сайте не требуется.</p></details>
+        ${deliveryMethods()}
+        <details class="detail-terms"><summary>Гарантия и возврат${icon('chevron-down')}</summary><p>Документы, условия гарантии и возврата уточните у менеджера до оформления заказа. Оплата на сайте не требуется.</p></details>
       </div>
     </article>
     ${productRecommendations(product)}
@@ -681,7 +868,6 @@ function selectProductPhoto(index) {
   image.alt = `${product.name} — ${photo.label}`;
   document.querySelectorAll('[data-gallery]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.gallery) === index)));
   document.querySelector('.gallery-count').textContent = `${index + 1} / ${photos.length}`;
-  document.querySelector('.gallery-caption').textContent = photo.label + (photos.length > 1 && index === 0 ? '. Исполнение сверяйте с фото из каталога.' : '.');
   if (photoDialog.open) {
     setPhotoZoom(false);
     const zoomImage = photoDialog.querySelector('img');
@@ -764,7 +950,10 @@ function renderRoute() {
   cleanupPopularCarousel();
   const { page, params } = currentRoute();
   galleryIndex = 0;
-  main.innerHTML = page === 'catalog' ? catalog(params) : page === 'product' ? productPage(params) : home();
+  main.innerHTML = page === 'catalog' ? catalog(params) : page === 'product' ? productPage(params) : page === 'cart' ? cartPage() : page === 'checkout' ? checkoutPage() : home();
+  if (page === 'checkout') restoreCheckout();
+  const cartFeedback = document.querySelector('.cart-feedback');
+  if (cartFeedback) cartFeedback.hidden = true;
   document.title = (page === 'home' ? 'Запчасти для спецтехники' : main.querySelector('h1')?.textContent || 'Запчасти для спецтехники') + ' — Эльторг';
   document.querySelector('.navigation').classList.remove('open');
   document.querySelector('.header-search input[name="q"]').value = page === 'catalog' ? params.get('q') || '' : '';
@@ -783,7 +972,7 @@ function openRequest(subject, productId) {
   returnFocus = document.activeElement;
   const selected = product ? `<div class="request-selection">${productPreview(product)}<div><strong>${escapeHtml(product.name)}</strong><small>${product.demo ? 'Демо · ' : ''}${product.article ? `Артикул ${product.article} · ` : ''}${money(product.price)}</small></div></div>` : '';
   const message = product ? `${product.name}${product.article ? ', артикул ' + product.article : ''}` : subject || '';
-  document.querySelector('#request-body').innerHTML = `<div class="dialog-kicker">ЭЛЬТОРГ / ПОДБОР ЗАПЧАСТЕЙ</div><h2 id="request-title" class="request-heading">Разберёмся в деталях.</h2><p class="request-intro">Оставьте контакт и расскажите, что нужно вашей технике.</p>${selected}${requestFields(message, product?.id || '')}`;
+  document.querySelector('#request-body').innerHTML = `<div class="dialog-kicker">ЭЛЬТОРГ / ПОДБОР ЗАПЧАСТЕЙ</div><h2 id="request-title" class="request-heading">Быстрый и точный подбор запчастей</h2><p class="request-intro">Оставьте контакт и расскажите, что нужно вашей технике.</p>${selected}${requestFields(message, product?.id || '')}`;
   refreshIcons();
   dialog.showModal();
   document.body.classList.add('modal-open');
@@ -846,7 +1035,7 @@ document.addEventListener('click', event => {
   const previewLink = event.target.closest('a[href^="#"]');
   if (previewLink && previewLink.getAttribute('href') !== '#home') {
     const destination = previewLink.getAttribute('href');
-    if (destination.startsWith('#product') || destination.startsWith('#catalog')) return;
+    if (destination.startsWith('#product') || destination.startsWith('#catalog') || destination === '#cart' || destination === '#checkout') return;
     if (currentRoute().page !== 'home') return;
     event.preventDefault();
     const href = previewLink.getAttribute('href');
@@ -861,8 +1050,6 @@ document.addEventListener('click', event => {
     section?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
     return;
   }
-  const productButton = event.target.closest('[data-product]');
-  if (productButton) return openRequest('', productButton.dataset.product);
   const requestButton = event.target.closest('[data-request]');
   if (requestButton) return openRequest(requestButton.dataset.request);
   const queryButton = event.target.closest('[data-query]');
@@ -995,9 +1182,9 @@ updateHeaderState();
 window.addEventListener('hashchange', () => {
   if (dialog.open) closeRequest();
   if (photoDialog.open) photoDialog.close();
-  if (!['home', 'catalog', 'product'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
+  if (!['home', 'catalog', 'product', 'cart', 'checkout'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
   renderRoute();
   main.focus({ preventScroll: true });
 });
-if (!['home', 'catalog', 'product'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
+if (!['home', 'catalog', 'product', 'cart', 'checkout'].includes(currentRoute().page)) history.replaceState(null, '', '#home');
 renderRoute();

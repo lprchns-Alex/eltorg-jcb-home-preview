@@ -13,7 +13,7 @@ if (selected < 0) selected = null;
 let requestText = '';
 
 function drawing() {
-  return `<div class="machine-drawing"><img src="assets/jcb-profile-extended-v2.png" width="1536" height="1024" alt="Визуализация JCB 3CX на основе фотографии: вид сбоку с развёрнутой задней стрелой и указателями шарниров"><svg class="leader-lines" viewBox="0 0 1000 666.6667" aria-hidden="true">${assemblies.map((node, index) => `<g data-line="${index}"><polyline class="node-line" points="${node.marker.join(',')} ${node.elbow.join(',')} ${node.anchor.join(',')}"></polyline><circle class="node-end" cx="${node.anchor[0]}" cy="${node.anchor[1]}" r="5"></circle></g>`).join('')}</svg>${assemblies.map((node, index) => `<button class="machine-node" style="left:${node.marker[0] / 10}%;top:${node.marker[1] / 6.666667}%" data-node="${index}" aria-label="${number(index)}. ${node.title}" aria-pressed="false" title="${node.title}">${number(index)}</button>`).join('')}</div>`;
+  return `<div class="machine-drawing"><img src="assets/jcb-profile-extended-v2.png" width="1536" height="1024" alt="JCB 3CX, 4CX: вид сбоку с развёрнутой задней стрелой и указателями шарниров"><svg class="leader-lines" viewBox="0 0 1000 666.6667" aria-hidden="true">${assemblies.map((node, index) => `<g data-line="${index}"><polyline class="node-line" points="${node.marker.join(',')} ${node.elbow.join(',')} ${node.anchor.join(',')}"></polyline><circle class="node-end" cx="${node.anchor[0]}" cy="${node.anchor[1]}" r="5"></circle></g>`).join('')}</svg>${assemblies.map((node, index) => `<button class="machine-node" style="left:${node.marker[0] / 10}%;top:${node.marker[1] / 6.666667}%" data-node="${index}" aria-label="${number(index)}. ${node.title}" aria-pressed="false" title="${node.title}">${number(index)}</button>`).join('')}</div>`;
 }
 
 function row(node, index, part) {
@@ -36,8 +36,8 @@ function row(node, index, part) {
 function renderParts() {
   const query = $('#part-search').value.trim().toLocaleLowerCase('ru');
   const node = selected === null ? null : assemblies[selected];
-  $('#parts-title').textContent = node ? node.title : 'Пальцы и втулки JCB 3CX';
-  $('#parts-eyebrow').textContent = node ? `СОЕДИНЕНИЕ ${number(selected)} · JCB 3CX` : 'ДЕТАЛИ ШАРНИРНЫХ СОЕДИНЕНИЙ';
+  $('#parts-title').textContent = node ? node.title : 'Пальцы и втулки JCB 3CX, 4CX';
+  $('#parts-eyebrow').textContent = node ? `СОЕДИНЕНИЕ ${number(selected)} · JCB 3CX, 4CX` : 'ДЕТАЛИ ШАРНИРНЫХ СОЕДИНЕНИЙ';
   const list = $('#parts-list');
   list.replaceChildren();
   list.scrollTop = 0;
@@ -88,13 +88,13 @@ function selectNode(index, updateHash = true) {
 function openContact(part, index = selected, demo = false, demoPrice = false) {
   const nodeTitle = index === null ? 'Уточнить по VIN' : assemblies[index].title;
   const title = part || (index === null ? 'Подбор запчастей' : nodeTitle);
-  requestText = `Здравствуйте! Нужен подбор для JCB 3CX. Узел: ${nodeTitle}. Деталь: ${title}. VIN: `;
+  requestText = `Здравствуйте! Нужен подбор для JCB 3CX, 4CX. Узел: ${nodeTitle}. Деталь: ${title}. VIN: `;
   if (demo) requestText += '(Артикул и производитель из демонстрационного макета, требуют проверки.)';
   $('.contact-note').textContent = demo
     ? 'Артикул и производитель показаны для примера. Сообщите менеджеру VIN для проверки детали.'
     : 'Сообщите менеджеру VIN или серийный номер машины.';
   if (demoPrice) $('.contact-note').textContent += ' Цена в макете демонстрационная. Актуальную стоимость подтвердит менеджер.';
-  $('#contact-selection').textContent = `JCB 3CX · ${title}`;
+  $('#contact-selection').textContent = `JCB 3CX, 4CX · ${title}`;
   $('#copy-status').textContent = '';
   $('#assembly-contact').showModal();
 }
