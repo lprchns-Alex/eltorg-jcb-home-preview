@@ -6,12 +6,9 @@
   width: 276px;
   max-width: 100%;
 }
-.brand-logo { display: block; width: 100%; height: auto; aspect-ratio: 539 / 118; }
-.brand-descriptor { display: block; padding-left: 85px; margin-top: 2px; color: #626a6e; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: nowrap; }
-.brand-descriptor span { display: block; }
-.main-header .brand { flex-shrink: 1; min-width: 0; width: 276px; height: auto; gap: 2.662px; justify-content: center; }
+.brand-logo { display: block; width: 100%; height: auto; aspect-ratio: 539 / 160; }
+.main-header .brand { flex-shrink: 1; min-width: 0; width: 276px; height: auto; gap: 0; justify-content: center; }
 .main-header .brand-logo { flex-shrink: 0; width: 100%; height: auto; object-fit: contain; }
-.main-header .brand-descriptor { padding-left: 0; margin-top: 0; align-self: center; font-size: 14.641px; line-height: 18.634px; }
 .main-header, .catalog-page .site-header .main-header { min-height: 116px; }
 .header-phones { gap: 0; }
 @media (max-width: 700px) {
@@ -20,5 +17,4 @@
 }
 @media (max-width: 380px) {
   .main-header .brand { width: min(276px, calc(100% - 132px)); }
-  .main-header .brand-descriptor { font-size: 11px; }
 }
