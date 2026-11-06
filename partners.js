@@ -1,7 +1,7 @@
 (() => {
   const standalone = document.body.hasAttribute('data-partners-preview');
   const entryVariant = new URLSearchParams(location.search).get('partner-entry');
-  const showHeaderEntry = entryVariant === 'header' || (standalone && entryVariant !== 'footer');
+  const showHeaderEntry = entryVariant !== 'footer';
   const symbol = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
   let entryFocus = null;
 
@@ -43,7 +43,7 @@
   document.querySelector('.footer-bottom')?.insertAdjacentHTML('beforeend', `<button type="button" class="partner-footer-entry" data-partner-login>${symbol('user-round')}Войти в кабинет</button>`);
   if (showHeaderEntry) {
     document.body.classList.add('partner-header-preview');
-    document.querySelector('.main-header .mobile-menu')?.insertAdjacentHTML('beforebegin', `<button type="button" class="icon-button partner-header-entry" data-partner-login aria-label="Войти в кабинет" aria-haspopup="dialog" title="Войти в кабинет">${symbol('log-in')}<span class="partner-entry-tooltip" aria-hidden="true">Войти в кабинет</span></button>`);
+    document.querySelector('.main-header .header-search')?.insertAdjacentHTML('afterend', `<button type="button" class="icon-button partner-header-entry" data-partner-login aria-label="Войти в кабинет" aria-haspopup="dialog" aria-controls="partner-login-dialog" title="Войти в кабинет">${symbol('log-in')}<span class="partner-entry-tooltip" aria-hidden="true">Войти в кабинет</span></button>`);
   }
 
   document.body.insertAdjacentHTML('beforeend', `
@@ -69,7 +69,7 @@
 
     // Keep the chosen review variant when moving between the two HTML entry points.
     const link = event.target.closest('a[href]');
-    if (standalone || !showHeaderEntry || !link) return;
+    if (standalone || entryVariant !== 'header' || !link) return;
     const url = new URL(link.href, location.href);
     const siblingPages = ['index.html', 'pins-bushings-stacked.html'];
     if (url.origin === location.origin && siblingPages.includes(url.pathname.split('/').pop())) {

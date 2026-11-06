@@ -19,7 +19,7 @@
 .partner-footer-entry { display: inline-flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 0; font: inherit; color: var(--muted); white-space: nowrap; }
 .partner-footer-entry svg { width: 18px; height: 18px; }
 .footer-bottom:has(.partner-footer-entry) { align-items: center; gap: 24px; }
-.partner-header-entry { position: relative; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); margin-left: -16px; }
+.partner-header-entry { position: relative; width: 52px; height: 52px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); }
 .partner-header-entry:hover { color: var(--ink); background: var(--paper); }
 .partner-header-entry svg { width: 20px; height: 20px; }
 .partner-entry-tooltip { position: absolute; top: calc(100% + 8px); right: 0; z-index: 2; padding: 6px 10px; border-radius: 4px; background: var(--ink); color: white; font-size: 12px; line-height: 1.5; white-space: nowrap; visibility: hidden; opacity: 0; pointer-events: none; }
@@ -48,6 +48,10 @@
   .partners-contact .button { width: auto; display: flex; }
   .partners-services { padding-top: 20px; }
 }
+@media (min-width: 701px) and (max-width: 800px) {
+  .partner-header-preview .main-header { column-gap: 16px; }
+  .partner-header-preview .header-search .icon-button { width: 52px; }
+}
 @media (max-width: 700px) {
   .partners-page { padding-bottom: 32px; }
   .partners-heading p { font-size: 14px; max-width: 330px; }
@@ -56,14 +60,12 @@
   .partners-phone { margin-top: 20px; }
   .footer-bottom:has(.partner-footer-entry) { align-items: flex-start; gap: 16px; }
   .partner-footer-entry { min-height: 44px; }
-  .main-header .partner-header-entry { margin-left: 0; width: 44px; }
-  .partner-header-preview .main-header .brand { width: 174px; }
+  .main-header .partner-header-entry { margin-left: auto; width: 44px; height: 44px; }
+  .partner-header-preview .header-phones { margin-left: 0; }
 }
 @media (max-width: 380px) {
   .partners-services li { font-size: 11px; }
   .partner-header-preview .main-header { column-gap: 4px; }
-  .partner-header-preview .main-header .brand { width: 150px; }
-  .partner-header-preview .main-header .brand-descriptor { font-size: 10px; }
   .partner-header-preview .main-header .header-phone, .partner-header-preview .main-header .mobile-menu { width: 40px; }
   .main-header .partner-header-entry { width: 40px; height: 40px; }
 }
